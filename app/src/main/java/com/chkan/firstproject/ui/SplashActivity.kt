@@ -1,4 +1,4 @@
-package com.chkan.firstproject
+package com.chkan.firstproject.ui
 
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +11,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import android.content.Intent
+import com.chkan.firstproject.MainActivity
+import com.chkan.firstproject.R
 
 
 class SplashActivity : AppCompatActivity() {
