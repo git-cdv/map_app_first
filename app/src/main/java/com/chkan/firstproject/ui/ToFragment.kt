@@ -2,7 +2,6 @@ package com.chkan.firstproject.ui
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import com.chkan.firstproject.R
 import com.chkan.firstproject.data.network.ApiResult
+import com.chkan.firstproject.data.network.model.ResponseGson
 import com.chkan.firstproject.databinding.FragmentToBinding
 import com.chkan.firstproject.viewmodels.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -20,15 +20,21 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.snackbar.Snackbar
+import com.google.maps.android.PolyUtil
 import java.util.*
 
 class ToFragment : Fragment() {
 
     private val viewModel: MainViewModel by activityViewModels()
     private var mapFragment: SupportMapFragment? = null
+    private lateinit var mapObject: GoogleMap
     private var _binding: FragmentToBinding? = null
     private val binding get() = _binding!!
+
+    private val latLngOrig = LatLng(47.84451, 35.12993)
+    private val latLngDest = LatLng(47.83875, 35.14028)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,8 +52,6 @@ class ToFragment : Fragment() {
         )
 
         binding.btnTo.setOnClickListener {
-            val latLngOrig = LatLng(47.84451, 35.12993)
-            val latLngDest = LatLng(47.83875, 35.14028)
             val origin = latLngOrig.latitude.toString() + "," + latLngOrig.longitude.toString()
             val destination = latLngDest.latitude.toString() + "," + latLngDest.longitude.toString()
 
@@ -56,7 +60,21 @@ class ToFragment : Fragment() {
 
         viewModel.apiResult.observe(viewLifecycleOwner, {
             when(it){
-                is ApiResult.Success -> Log.d("MYAPP", "ToFragment - apiResult: Success")
+                is ApiResult.Success -> {
+
+                    val markerFrom = MarkerOptions()
+                        .position(latLngOrig)
+                        .title("Start")
+                    val markerTo = MarkerOptions()
+                        .position(latLngDest)
+                        .title("Finish")
+
+                    mapObject.addMarker(markerFrom)
+                    mapObject.addMarker(markerTo)
+                    mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngDest, 11.6f))
+
+                    drawDestination(it.data)
+                }
                 is ApiResult.Error -> {
                     val snackbar = Snackbar.make(binding.root, resources.getText(R.string.error_text), Snackbar.LENGTH_LONG)
                     snackbar.setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show()
@@ -86,6 +104,7 @@ class ToFragment : Fragment() {
         if (mapFragment == null) {
             mapFragment = SupportMapFragment.newInstance()
             mapFragment!!.getMapAsync(OnMapReadyCallback { map ->
+                mapObject = map
                 // добавляем маркер по координатам и "фокусируемся" на нем
                 val latLngWork = LatLng(47.84303067630826, 35.13851845689717)
                 latLngWork.toString()
@@ -100,6 +119,15 @@ class ToFragment : Fragment() {
         childFragmentManager.beginTransaction().replace(R.id.mapTo, mapFragment!!).commit()
 
         return binding.root
+    }
+
+    private fun drawDestination(data: ResponseGson) {
+        val shape = data.routes.get(0).overviewPolyline.points
+        val polyline = PolylineOptions()
+            .addAll(PolyUtil.decode(shape))
+            .width(8f)
+            .color(Color.BLACK)
+        mapObject.addPolyline(polyline)
     }
 
     //создаем маркер при долгом нажатии
