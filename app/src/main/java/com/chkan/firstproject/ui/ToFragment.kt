@@ -33,9 +33,6 @@ class ToFragment : Fragment() {
     private var _binding: FragmentToBinding? = null
     private val binding get() = _binding!!
 
-    private val latLngOrig = LatLng(47.84451, 35.12993)
-    private val latLngDest = LatLng(47.83875, 35.14028)
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,10 +49,7 @@ class ToFragment : Fragment() {
         )
 
         binding.btnTo.setOnClickListener {
-            val origin = latLngOrig.latitude.toString() + "," + latLngOrig.longitude.toString()
-            val destination = latLngDest.latitude.toString() + "," + latLngDest.longitude.toString()
-
-            viewModel.getDirections(destination, origin,"AIzaSyAXrI3OF_DmXo-r6V_klQE_3mPEiZ4lIlo")
+            viewModel.getDirections()
         }
 
         viewModel.apiResult.observe(viewLifecycleOwner, {
@@ -63,17 +57,21 @@ class ToFragment : Fragment() {
                 is ApiResult.Success -> {
 
                     val markerFrom = MarkerOptions()
-                        .position(latLngOrig)
+                        .position(viewModel.latLngStart)
                         .title("Start")
                     val markerTo = MarkerOptions()
-                        .position(latLngDest)
+                        .position(viewModel.latLngFinish)
                         .title("Finish")
 
                     mapObject.addMarker(markerFrom)
                     mapObject.addMarker(markerTo)
-                    mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngDest, 11.6f))
+                    mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.latLngFinish, 11.6f))
 
                     drawDestination(it.data)
+
+                    val snackbar = Snackbar.make(binding.root, resources.getText(R.string.ok_text), Snackbar.LENGTH_LONG)
+                    snackbar.setBackgroundTint(Color.LTGRAY).setTextColor(Color.WHITE).show()
+
                 }
                 is ApiResult.Error -> {
                     val snackbar = Snackbar.make(binding.root, resources.getText(R.string.error_text), Snackbar.LENGTH_LONG)
@@ -87,9 +85,7 @@ class ToFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 binding.searchTo.clearFocus()
                 if (user.contains(query)){
-
                     userAdapter.filter.filter(query)
-
                 }
                 return false
             }
@@ -134,6 +130,8 @@ class ToFragment : Fragment() {
     private fun setMapLongClick(map: GoogleMap) {
         map.setOnMapLongClickListener { latLng ->
 
+            viewModel.checkFinish(latLng)
+
             // A snippet is additional text that's displayed after the title.
             val snippet = String.format(
                 Locale.getDefault(),
@@ -145,7 +143,7 @@ class ToFragment : Fragment() {
             map.addMarker(
                 MarkerOptions()
                     .position(latLng)
-                    .title(getString(R.string.dropped_pin))//тайтл для снипета
+                    .title(getString(R.string.dropped_finish))//тайтл для снипета
                     .snippet(snippet)//текст для снипета
             )
         }

@@ -7,18 +7,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chkan.firstproject.data.network.Api
 import com.chkan.firstproject.data.network.ApiResult
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel(){
+
+    lateinit var latLngStart: LatLng
+    lateinit var latLngFinish: LatLng
+    private val key = "AIzaSyAXrI3OF_DmXo-r6V_klQE_3mPEiZ4lIlo"
 
     private val _apiResult = MutableLiveData<ApiResult>()
     val apiResult: LiveData<ApiResult>
         get() = _apiResult
 
-    fun getDirections(origin:String, destination:String,key:String){
+    fun getDirections(){
         viewModelScope.launch {
             try {
-                val response = Api.retrofitService.getDirection(origin,destination,key)
+                val origin = latLngStart.latitude.toString() + "," + latLngStart.longitude.toString()
+                val dest = latLngFinish.latitude.toString() + "," + latLngFinish.longitude.toString()
+                val response = Api.retrofitService.getDirection(origin,dest,key)
                 _apiResult.value = ApiResult.Success(response)
                 Log.d("MYAPP", "MainViewModel - apiResult: $response")
             }catch (e: Exception) {
@@ -26,6 +33,14 @@ class MainViewModel : ViewModel(){
                 Log.d("MYAPP", "MainViewModel - apiResult: $e")
             }
         }
+    }
+
+    fun checkStart(latLng: LatLng) {
+        latLngStart = latLng
+    }
+
+    fun checkFinish(latLng: LatLng) {
+        latLngFinish = latLng
     }
 
 }

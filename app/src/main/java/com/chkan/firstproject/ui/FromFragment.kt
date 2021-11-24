@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.activityViewModels
 import com.chkan.firstproject.R
 import com.chkan.firstproject.databinding.FragmentFromBinding
+import com.chkan.firstproject.viewmodels.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -19,6 +21,7 @@ import java.util.*
 
 class FromFragment : Fragment() {
 
+    private val viewModel: MainViewModel by activityViewModels()
     private var mapFragment: SupportMapFragment? = null
     private var _binding: FragmentFromBinding? = null
     private val binding get() = _binding!!
@@ -59,7 +62,7 @@ class FromFragment : Fragment() {
 
         if (mapFragment == null) {
             mapFragment = SupportMapFragment.newInstance()
-            mapFragment!!.getMapAsync(OnMapReadyCallback { map ->
+            mapFragment!!.getMapAsync { map ->
 
                 // добавляем маркер по координатам и "фокусируемся" на нем
                 val latLngWork = LatLng(47.84303067630826, 35.13851845689717)
@@ -68,7 +71,7 @@ class FromFragment : Fragment() {
 
                 setMapLongClick(map)//сетим слушатель на лонгклик для маркера
 
-            })
+            }
         }
 
         // R.id.map is a FrameLayout, not a Fragment
@@ -81,6 +84,8 @@ class FromFragment : Fragment() {
     private fun setMapLongClick(map: GoogleMap) {
         map.setOnMapLongClickListener { latLng ->
 
+            viewModel.checkStart(latLng)
+
             // A snippet is additional text that's displayed after the title.
             val snippet = String.format(
                 Locale.getDefault(),
@@ -92,7 +97,7 @@ class FromFragment : Fragment() {
             map.addMarker(
                 MarkerOptions()
                     .position(latLng)
-                    .title(getString(R.string.dropped_pin))//тайтл для снипета
+                    .title(getString(R.string.dropped_start))//тайтл для снипета
                     .snippet(snippet)//текст для снипета
             )
         }

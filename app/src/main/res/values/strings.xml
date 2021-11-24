@@ -8,6 +8,8 @@
     <string name="text_search_to">Найдите место прибытия</string>
     <string name="text_map_from">или укажите на карте</string>
     <string name="btn_to_text">Построить маршрут</string>
-    <string name="dropped_pin">Dropped Pin</string>
+    <string name="dropped_start">Точка старта</string>
+    <string name="dropped_finish">Точка финиша</string>
     <string name="error_text">Unknown</string>
+    <string name="ok_text">Found</string>
 </resources>
