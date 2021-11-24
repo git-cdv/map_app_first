@@ -11,10 +11,12 @@ import com.chkan.firstproject.R
 import com.chkan.firstproject.databinding.FragmentFromBinding
 import com.chkan.firstproject.databinding.FragmentToBinding
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import java.util.*
 
 class ToFragment : Fragment() {
 
@@ -59,13 +61,13 @@ class ToFragment : Fragment() {
 
         if (mapFragment == null) {
             mapFragment = SupportMapFragment.newInstance()
-            mapFragment!!.getMapAsync(OnMapReadyCallback { googleMap ->
-                val latLng = LatLng(1.289545, 103.849972)
-                googleMap.addMarker(
-                    MarkerOptions().position(latLng)
-                        .title("Singapore")
-                )
-                googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+            mapFragment!!.getMapAsync(OnMapReadyCallback { map ->
+                // добавляем маркер по координатам и "фокусируемся" на нем
+                val latLngWork = LatLng(47.84303067630826, 35.13851845689717)
+                val zoomLevel = 15f
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngWork, zoomLevel))
+
+                setMapLongClick(map)//сетим слушатель на лонгклик для маркера
             })
         }
 
@@ -73,6 +75,27 @@ class ToFragment : Fragment() {
         childFragmentManager.beginTransaction().replace(R.id.mapTo, mapFragment!!).commit()
 
         return binding.root
+    }
+
+    //создаем маркер при долгом нажатии
+    private fun setMapLongClick(map: GoogleMap) {
+        map.setOnMapLongClickListener { latLng ->
+
+            // A snippet is additional text that's displayed after the title.
+            val snippet = String.format(
+                Locale.getDefault(),
+                "Lat: %1$.5f, Long: %2$.5f",
+                latLng.latitude,
+                latLng.longitude
+            )
+
+            map.addMarker(
+                MarkerOptions()
+                    .position(latLng)
+                    .title(getString(R.string.dropped_pin))//тайтл для снипета
+                    .snippet(snippet)//текст для снипета
+            )
+        }
     }
 
     override fun onDestroyView() {
