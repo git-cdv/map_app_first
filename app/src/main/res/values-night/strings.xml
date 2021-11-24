@@ -3,4 +3,5 @@
     <string name="search_hint">SearchHint</string>
     <string name="error_text">Unknown</string>
     <string name="ok_text">Found</string>
+    <string name="search">Поиск локации</string>
 </resources>

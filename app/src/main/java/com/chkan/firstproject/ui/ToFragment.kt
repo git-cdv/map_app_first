@@ -28,8 +28,10 @@ import java.util.*
 class ToFragment : Fragment() {
 
     private val viewModel: MainViewModel by activityViewModels()
+
     private var mapFragment: SupportMapFragment? = null
     private lateinit var mapObject: GoogleMap
+
     private var _binding: FragmentToBinding? = null
     private val binding get() = _binding!!
 
@@ -80,7 +82,6 @@ class ToFragment : Fragment() {
             }
         })
 
-
         binding.searchTo.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 binding.searchTo.clearFocus()
@@ -94,7 +95,6 @@ class ToFragment : Fragment() {
                 userAdapter.filter.filter(newText)
                 return false
             }
-
         })
 
         if (mapFragment == null) {
