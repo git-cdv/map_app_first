@@ -1,24 +1,31 @@
 package com.chkan.firstproject.ui
 
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.activityViewModels
 import com.chkan.firstproject.R
+import com.chkan.firstproject.data.network.ApiResult
 import com.chkan.firstproject.databinding.FragmentToBinding
+import com.chkan.firstproject.viewmodels.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
 class ToFragment : Fragment() {
 
+    private val viewModel: MainViewModel by activityViewModels()
     private var mapFragment: SupportMapFragment? = null
     private var _binding: FragmentToBinding? = null
     private val binding get() = _binding!!
@@ -39,10 +46,24 @@ class ToFragment : Fragment() {
         )
 
         binding.btnTo.setOnClickListener {
+            val latLngOrig = LatLng(47.84451, 35.12993)
+            val latLngDest = LatLng(47.83875, 35.14028)
+            val origin = latLngOrig.latitude.toString() + "," + latLngOrig.longitude.toString()
+            val destination = latLngDest.latitude.toString() + "," + latLngDest.longitude.toString()
 
+            viewModel.getDirections(destination, origin,"AIzaSyAXrI3OF_DmXo-r6V_klQE_3mPEiZ4lIlo")
         }
 
-        //binding.listTo.adapter = userAdapter
+        viewModel.apiResult.observe(viewLifecycleOwner, {
+            when(it){
+                is ApiResult.Success -> Log.d("MYAPP", "ToFragment - apiResult: Success")
+                is ApiResult.Error -> {
+                    val snackbar = Snackbar.make(binding.root, resources.getText(R.string.error_text), Snackbar.LENGTH_LONG)
+                    snackbar.setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show()
+                }
+            }
+        })
+
 
         binding.searchTo.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -67,6 +88,7 @@ class ToFragment : Fragment() {
             mapFragment!!.getMapAsync(OnMapReadyCallback { map ->
                 // добавляем маркер по координатам и "фокусируемся" на нем
                 val latLngWork = LatLng(47.84303067630826, 35.13851845689717)
+                latLngWork.toString()
                 val zoomLevel = 15f
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngWork, zoomLevel))
 

@@ -44,18 +44,24 @@ dependencies {
     //coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
+    //lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
+    implementation 'androidx.fragment:fragment-ktx:1.4.0'
     // Moshi
     implementation 'com.squareup.moshi:moshi-kotlin:1.9.3'
     // Retrofit with Moshi Converter
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+
+    //logging-interceptor
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3'
 
     //viewpager
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     //maps
     implementation 'com.google.android.gms:play-services-maps:18.0.0'
+
 
 
     testImplementation 'junit:junit:4.+'

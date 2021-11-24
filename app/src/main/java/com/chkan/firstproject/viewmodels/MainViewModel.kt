@@ -1,5 +1,6 @@
 package com.chkan.firstproject.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,8 +20,10 @@ class MainViewModel : ViewModel(){
             try {
                 val response = Api.retrofitService.getDirection(origin,destination,key)
                 _apiResult.value = ApiResult.Success(response)
+                Log.d("MYAPP", "MainViewModel - apiResult: $response")
             }catch (e: Exception) {
                 _apiResult.value = ApiResult.Error(e)
+                Log.d("MYAPP", "MainViewModel - apiResult: $e")
             }
         }
     }
