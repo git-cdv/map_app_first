@@ -1,21 +1,21 @@
 package com.chkan.firstproject.data.network.model
 
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 data class Route(
-    @Json(name = "bounds")
+    @SerializedName("bounds")
     val bounds: Bounds,
-    @Json(name = "copyrights")
+    @SerializedName("copyrights")
     val copyrights: String,
-    @Json(name = "legs")
+    @SerializedName("legs")
     val legs: List<Leg>,
-    @Json(name = "overview_polyline")
+    @SerializedName("overview_polyline")
     val overviewPolyline: OverviewPolyline,
-    @Json(name = "summary")
+    @SerializedName("summary")
     val summary: String,
-    @Json(name = "warnings")
+    @SerializedName("warnings")
     val warnings: List<Any>,
-    @Json(name = "waypoint_order")
+    @SerializedName("waypoint_order")
     val waypointOrder: List<Any>
 )

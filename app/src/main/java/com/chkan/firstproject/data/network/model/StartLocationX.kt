@@ -1,11 +1,11 @@
 package com.chkan.firstproject.data.network.model
 
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 data class StartLocationX(
-    @Json(name = "lat")
+    @SerializedName("lat")
     val lat: Double,
-    @Json(name = "lng")
+    @SerializedName("lng")
     val lng: Double
 )

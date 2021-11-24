@@ -1,11 +1,11 @@
 package com.chkan.firstproject.data.network.model
 
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 data class Bounds(
-    @Json(name = "northeast")
+    @SerializedName("northeast")
     val northeast: Northeast,
-    @Json(name = "southwest")
+    @SerializedName("southwest")
     val southwest: Southwest
 )

@@ -1,23 +1,23 @@
 package com.chkan.firstproject.data.network.model
 
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 data class Step(
-    @Json(name = "distance")
+    @SerializedName("distance")
     val distance: DistanceX,
-    @Json(name = "duration")
+    @SerializedName("duration")
     val duration: DurationX,
-    @Json(name = "end_location")
+    @SerializedName("end_location")
     val endLocation: EndLocationX,
-    @Json(name = "html_instructions")
+    @SerializedName("html_instructions")
     val htmlInstructions: String,
-    @Json(name = "maneuver")
+    @SerializedName("maneuver")
     val maneuver: String,
-    @Json(name = "polyline")
+    @SerializedName("polyline")
     val polyline: Polyline,
-    @Json(name = "start_location")
+    @SerializedName("start_location")
     val startLocation: StartLocationX,
-    @Json(name = "travel_mode")
+    @SerializedName("travel_mode")
     val travelMode: String
 )

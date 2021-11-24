@@ -1,11 +1,11 @@
 package com.chkan.firstproject.data.network.model
 
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 data class DurationX(
-    @Json(name = "text")
+    @SerializedName("text")
     val text: String,
-    @Json(name = "value")
+    @SerializedName("value")
     val value: Int
 )

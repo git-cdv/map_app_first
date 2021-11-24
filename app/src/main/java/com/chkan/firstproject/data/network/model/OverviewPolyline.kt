@@ -1,9 +1,9 @@
 package com.chkan.firstproject.data.network.model
 
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 data class OverviewPolyline(
-    @Json(name = "points")
+    @SerializedName("points")
     val points: String
 )

@@ -1,13 +1,13 @@
 package com.chkan.firstproject.data.network.model
 
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 data class GeocodedWaypoint(
-    @Json(name = "geocoder_status")
+    @SerializedName("geocoder_status")
     val geocoderStatus: String,
-    @Json(name = "place_id")
+    @SerializedName("place_id")
     val placeId: String,
-    @Json(name = "types")
+    @SerializedName("types")
     val types: List<String>
 )

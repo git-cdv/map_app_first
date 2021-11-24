@@ -48,13 +48,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
     implementation 'androidx.fragment:fragment-ktx:1.4.0'
-    // Moshi
-    implementation 'com.squareup.moshi:moshi-kotlin:1.9.3'
-    // Retrofit with Moshi Converter
-    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
 
-    //logging-interceptor
-    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3'
+    // Retrofit with gson Converter
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 
     //viewpager
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
