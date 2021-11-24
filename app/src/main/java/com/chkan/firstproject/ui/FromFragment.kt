@@ -7,10 +7,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
+import com.chkan.firstproject.R
 import com.chkan.firstproject.databinding.FragmentFromBinding
+
+
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import android.widget.Toast
+
+
+
+
+
+
 
 class FromFragment : Fragment() {
 
+    private var mapFragment: SupportMapFragment? = null
     private var _binding: FragmentFromBinding? = null
     private val binding get() = _binding!!
 
@@ -29,7 +46,7 @@ class FromFragment : Fragment() {
             user
         )
 
-        binding.listFrom.adapter = userAdapter
+        //binding.listFrom.adapter = userAdapter
 
         binding.searchFrom.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -46,10 +63,22 @@ class FromFragment : Fragment() {
                 userAdapter.filter.filter(newText)
                 return false
             }
-
-
         })
 
+        if (mapFragment == null) {
+            mapFragment = SupportMapFragment.newInstance()
+            mapFragment!!.getMapAsync(OnMapReadyCallback { googleMap ->
+                val latLng = LatLng(1.289545, 103.849972)
+                googleMap.addMarker(
+                    MarkerOptions().position(latLng)
+                        .title("Singapore")
+                )
+                googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+            })
+        }
+
+        // R.id.map is a FrameLayout, not a Fragment
+        childFragmentManager.beginTransaction().replace(R.id.map, mapFragment!!).commit()
 
         return binding.root
     }
@@ -58,4 +87,5 @@ class FromFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }

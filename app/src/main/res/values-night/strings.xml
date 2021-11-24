@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="search_hint">SearchHint</string>
+    <string name="text_search_from">Найдите место отправки</string>
+    <string name="text_map_from">или укажите на карте</string>
+    <string name="btn_to_text">Построить маршрут</string>
 </resources>
