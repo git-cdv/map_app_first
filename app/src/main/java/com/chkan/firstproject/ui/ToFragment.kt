@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.SearchView
 import com.chkan.firstproject.R
-import com.chkan.firstproject.databinding.FragmentFromBinding
 import com.chkan.firstproject.databinding.FragmentToBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -38,6 +37,10 @@ class ToFragment : Fragment() {
             android.R.layout.simple_list_item_1,
             user
         )
+
+        binding.btnTo.setOnClickListener {
+
+        }
 
         //binding.listTo.adapter = userAdapter
 
