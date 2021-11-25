@@ -18,7 +18,9 @@ import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.activityViewModels
 import com.chkan.firstproject.R
+import com.chkan.firstproject.data.network.ApiDetailResult
 import com.chkan.firstproject.data.network.ApiPlaceResult
+import com.chkan.firstproject.data.network.model.autocomplete.Prediction
 import com.chkan.firstproject.databinding.FragmentFromBinding
 import com.chkan.firstproject.utils.hideKeyboard
 import com.chkan.firstproject.viewmodels.MainViewModel
@@ -34,10 +36,13 @@ class FromFragment : Fragment() {
 
     private val viewModel: MainViewModel by activityViewModels()
     private var mapFragment: SupportMapFragment? = null
+    private lateinit var mapObject: GoogleMap
+
     private var _binding: FragmentFromBinding? = null
     private val binding get() = _binding!!
 
     var suggestions : MutableList<String> = mutableListOf()
+    var listPlaces : List<Prediction> = listOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,12 +55,30 @@ class FromFragment : Fragment() {
         viewModel.apiPlaceResult.observe(viewLifecycleOwner, {
             when(it){
                 is ApiPlaceResult.Success -> {
-                    val list = it.data.listPlaces
-                    for (item in list) {
-                        suggestions.add(item.name)
+                    listPlaces = it.data.listPlaces
+                    val set = mutableSetOf<String>()
+                    for (item in listPlaces) {
+                        set.add(item.name)
                     }
+                    suggestions = set.toMutableList()
                 }
                 is ApiPlaceResult.Error -> {
+                    val snackbar = Snackbar.make(binding.root, resources.getText(R.string.error_text), Snackbar.LENGTH_LONG)
+                    snackbar.setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show()
+                }
+            }
+        })
+
+        viewModel.apiDetailResult.observe(viewLifecycleOwner, {
+            when(it){
+                is ApiDetailResult.Success -> {
+                    val lat = it.data.result.geometry.location.lat
+                    val lng = it.data.result.geometry.location.lng
+                    val latLng = LatLng(lat, lng)
+                    addStart(latLng)
+                    mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15F))
+                }
+                is ApiDetailResult.Error -> {
                     val snackbar = Snackbar.make(binding.root, resources.getText(R.string.error_text), Snackbar.LENGTH_LONG)
                     snackbar.setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show()
                 }
@@ -65,7 +88,7 @@ class FromFragment : Fragment() {
         if (mapFragment == null) {
             mapFragment = SupportMapFragment.newInstance()
             mapFragment!!.getMapAsync { map ->
-
+                mapObject = map
                 // добавляем маркер по координатам и "фокусируемся" на нем
                 val latLngWork = LatLng(47.84303067630826, 35.13851845689717)
                 val zoomLevel = 15f
@@ -84,23 +107,7 @@ class FromFragment : Fragment() {
     //создаем маркер при долгом нажатии
     private fun setMapLongClick(map: GoogleMap) {
         map.setOnMapLongClickListener { latLng ->
-
-            viewModel.checkStart(latLng)
-
-            // A snippet is additional text that's displayed after the title.
-            val snippet = String.format(
-                Locale.getDefault(),
-                "Lat: %1$.5f, Long: %2$.5f",
-                latLng.latitude,
-                latLng.longitude
-            )
-
-            map.addMarker(
-                MarkerOptions()
-                    .position(latLng)
-                    .title(getString(R.string.dropped_start))//тайтл для снипета
-                    .snippet(snippet)//текст для снипета
-            )
+            addStart(latLng)
         }
     }
 
@@ -124,7 +131,9 @@ class FromFragment : Fragment() {
             override fun onQueryTextChange(query: String?): Boolean {
 
                 if (query != null && query.length>2) {//если строка поиска не пута и имеет больше 2 символов
+
                     viewModel.getListPlaces(query)
+
                     Log.d("MYAPP", "onQueryTextChange - ${query.length}")
                 }
                 val cursor = MatrixCursor(arrayOf(BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1))
@@ -153,11 +162,32 @@ class FromFragment : Fragment() {
                 val selection = cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1))
                 searchView.setQuery(selection, false)
 
-                // Do something with selection
+                viewModel.getSelectedPlace(selection)
+
                 return true
             }
 
         })
+    }
+
+    private fun addStart(latLng: LatLng) {
+
+        viewModel.checkStart(latLng)
+
+        // A snippet is additional text that's displayed after the title.
+        val snippet = String.format(
+            Locale.getDefault(),
+            "Lat: %1$.5f, Long: %2$.5f",
+            latLng.latitude,
+            latLng.longitude
+        )
+
+        mapObject.addMarker(
+            MarkerOptions()
+                .position(latLng)
+                .title(getString(R.string.dropped_start))//тайтл для снипета
+                .snippet(snippet)//текст для снипета
+        )
     }
 
     override fun onDestroyView() {
