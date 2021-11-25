@@ -16,17 +16,10 @@
         android:text="@string/text_search_to"
         />
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchTo"
+    <fragment android:id="@+id/autocomplete_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:queryHint="Enter place"
-        android:iconifiedByDefault="false"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/searchview_backgound"
-        android:queryBackground="@android:color/transparent"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
         />
 
     <TextView

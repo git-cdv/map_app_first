@@ -39,7 +39,7 @@ class SplashActivity : AppCompatActivity() {
     private fun delayAndToMain(intent: Intent) {
         Log.d("MYAPP", "SplashActivity")
         scope.launch {
-            delay(2000L)
+            delay(1000L)
             startActivity(intent)
         }
 
