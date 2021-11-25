@@ -116,14 +116,7 @@ class ToFragment : Fragment() {
         autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onPlaceSelected(place: Place) {
 
-                viewModel.checkFinish(place.latLng)
-
-
-                mapObject.addMarker(
-                    MarkerOptions()
-                        .position(place.latLng)
-                        .title(getString(R.string.dropped_finish))//тайтл для снипета
-                )
+                addFinish(place.latLng)
 
                 mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(place.latLng, 15f))
 
@@ -151,24 +144,29 @@ class ToFragment : Fragment() {
     //создаем маркер при долгом нажатии
     private fun setMapLongClick(map: GoogleMap) {
         map.setOnMapLongClickListener { latLng ->
-
-            viewModel.checkFinish(latLng)
-
-            // A snippet is additional text that's displayed after the title.
-            val snippet = String.format(
-                Locale.getDefault(),
-                "Lat: %1$.5f, Long: %2$.5f",
-                latLng.latitude,
-                latLng.longitude
-            )
-
-            map.addMarker(
-                MarkerOptions()
-                    .position(latLng)
-                    .title(getString(R.string.dropped_finish))//тайтл для снипета
-                    .snippet(snippet)//текст для снипета
-            )
+            addFinish(latLng)
         }
+    }
+
+    private fun addFinish(latLng: LatLng) {
+
+        viewModel.checkFinish(latLng)
+
+        // A snippet is additional text that's displayed after the title.
+        val snippet = String.format(
+            Locale.getDefault(),
+            "Lat: %1$.5f, Long: %2$.5f",
+            latLng.latitude,
+            latLng.longitude
+        )
+
+        mapObject.addMarker(
+            MarkerOptions()
+                .position(latLng)
+                .title(getString(R.string.dropped_finish))//тайтл для снипета
+                .snippet(snippet)//текст для снипета
+        )
+
     }
 
     override fun onDestroyView() {

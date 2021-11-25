@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.app.SearchManager
 import android.database.Cursor
 import android.database.MatrixCursor
+import android.graphics.Color
 import android.os.Bundle
 import android.provider.BaseColumns
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,15 +18,16 @@ import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.activityViewModels
 import com.chkan.firstproject.R
+import com.chkan.firstproject.data.network.ApiPlaceResult
 import com.chkan.firstproject.databinding.FragmentFromBinding
 import com.chkan.firstproject.utils.hideKeyboard
 import com.chkan.firstproject.viewmodels.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import java.util.*
 
 class FromFragment : Fragment() {
@@ -34,13 +37,30 @@ class FromFragment : Fragment() {
     private var _binding: FragmentFromBinding? = null
     private val binding get() = _binding!!
 
+    var suggestions : MutableList<String> = mutableListOf()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFromBinding.inflate(inflater, container, false)
 
-        initsearchView(binding.searchFrom)
+        initSearchView(binding.searchFrom)
+
+        viewModel.apiPlaceResult.observe(viewLifecycleOwner, {
+            when(it){
+                is ApiPlaceResult.Success -> {
+                    val list = it.data.listPlaces
+                    for (item in list) {
+                        suggestions.add(item.name)
+                    }
+                }
+                is ApiPlaceResult.Error -> {
+                    val snackbar = Snackbar.make(binding.root, resources.getText(R.string.error_text), Snackbar.LENGTH_LONG)
+                    snackbar.setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show()
+                }
+            }
+        })
 
         if (mapFragment == null) {
             mapFragment = SupportMapFragment.newInstance()
@@ -84,7 +104,7 @@ class FromFragment : Fragment() {
         }
     }
 
-    private fun initsearchView(searchView: SearchView) {
+    private fun initSearchView(searchView: SearchView) {
 
         searchView.queryHint = getString(R.string.search)
         searchView.findViewById<AutoCompleteTextView>(R.id.search_src_text).threshold = 3
@@ -92,7 +112,6 @@ class FromFragment : Fragment() {
         val from = arrayOf(SearchManager.SUGGEST_COLUMN_TEXT_1)
         val to = intArrayOf(R.id.item_label)
         val cursorAdapter = SimpleCursorAdapter(context, R.layout.search_item, null, from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER)
-        val suggestions = listOf("Apple", "Blueberry", "Carrot", "Daikon")
 
         searchView.suggestionsAdapter = cursorAdapter
 
@@ -103,8 +122,14 @@ class FromFragment : Fragment() {
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
+
+                if (query != null && query.length>2) {//если строка поиска не пута и имеет больше 2 символов
+                    viewModel.getListPlaces(query)
+                    Log.d("MYAPP", "onQueryTextChange - ${query.length}")
+                }
                 val cursor = MatrixCursor(arrayOf(BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1))
                 query?.let {
+                    Log.d("MYAPP", "suggestions - $suggestions")
                     suggestions.forEachIndexed { index, suggestion ->
                         if (suggestion.contains(query, true))
                             cursor.addRow(arrayOf(index, suggestion))
