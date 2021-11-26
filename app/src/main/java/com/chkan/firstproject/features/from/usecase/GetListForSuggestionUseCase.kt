@@ -1,5 +1,6 @@
 package com.chkan.firstproject.features.from.usecase
 
+import com.chkan.firstproject.data.cash.CashDataSource
 import com.chkan.firstproject.data.datatype.Result
 import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.data.network.NetworkDataSource
@@ -16,12 +17,12 @@ class GetListForSuggestionUseCase {
             val listPlaces = listAsModel.data?.listPlaces
             val set = mutableSetOf<String>()
             if (listPlaces != null) {
+                CashDataSource.places = listPlaces
                 for (item in listPlaces) {
                     set.add(item.name)
                 }
             }
             Result.success(set.toMutableList())
-
         } else {
             Result.error(listAsModel.error)
         }

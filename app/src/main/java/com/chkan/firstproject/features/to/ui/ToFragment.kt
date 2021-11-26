@@ -121,7 +121,7 @@ class ToFragment : Fragment() {
             }
 
             override fun onError(status: Status) {
-                // TODO: Handle the error.
+                // TODO: Handle the error
                 Log.i("MYAPP", "An error occurred: $status")
             }
         })

@@ -41,7 +41,6 @@ class FromFragment : Fragment() {
     private val binding get() = _binding!!
 
     var suggestions : MutableList<String> = mutableListOf()
-    var listPlaces : List<Prediction> = listOf()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,21 +54,9 @@ class FromFragment : Fragment() {
                     suggestions = it
                 })
 
-
-        viewModel.apiDetailResult.observe(viewLifecycleOwner, {
-            when(it){
-                is ApiDetailResult.Success -> {
-                    val lat = it.data.result.geometry.location.lat
-                    val lng = it.data.result.geometry.location.lng
-                    val latLng = LatLng(lat, lng)
-                    addStart(latLng)
-                    mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15F))
-                }
-                is ApiDetailResult.Error -> {
-                    val snackbar = Snackbar.make(binding.root, resources.getText(R.string.error_text), Snackbar.LENGTH_LONG)
-                    snackbar.setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show()
-                }
-            }
+        viewModel.latLngSelectedPlaceLiveData.observe(viewLifecycleOwner, {
+                    addStart(it)
+                    mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15F))
         })
 
         if (mapFragment == null) {
@@ -81,8 +68,7 @@ class FromFragment : Fragment() {
                 val zoomLevel = 15f
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngWork, zoomLevel))
 
-                setMapLongClick(map)//сетим слушатель на лонгклик для маркера
-
+                setMapLongClick(map)
             }
         }
 
@@ -117,15 +103,10 @@ class FromFragment : Fragment() {
             override fun onQueryTextChange(query: String?): Boolean {
 
                 if (query != null && query.length>2) {//если строка поиска не пута и имеет больше 2 символов
-
                     viewModel.getListForSuggestion(query)
-
-                    Log.d("MYAPP", "onQueryTextChange - ${query.length}")
                 }
                 val cursor = MatrixCursor(arrayOf(BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1))
                 query?.let {
-                    Log.d("MYAPP", "suggestions - $suggestions")
-
                     //перебор элементов, предоставляя последовательный индекс с элементом
                     suggestions.forEachIndexed { index, value ->
                         if (value.contains(query, true))//если вводимое значение есть в
@@ -150,7 +131,7 @@ class FromFragment : Fragment() {
                 val selection = cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1))
                 searchView.setQuery(selection, false)
 
-                viewModel.getSelectedPlace(selection)
+                viewModel.getLatLngSelectedPlace(selection)
 
                 return true
             }
