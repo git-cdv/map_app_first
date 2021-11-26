@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.chkan.firstproject.databinding.ActivityMainBinding
-import com.chkan.firstproject.ui.ViewPagerAdapter
+import com.chkan.firstproject.utils.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {

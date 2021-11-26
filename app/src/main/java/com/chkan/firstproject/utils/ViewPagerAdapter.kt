@@ -1,4 +1,4 @@
-package com.chkan.firstproject.ui
+package com.chkan.firstproject.utils
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

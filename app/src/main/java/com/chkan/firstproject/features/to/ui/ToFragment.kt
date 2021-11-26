@@ -2,6 +2,7 @@ package com.chkan.firstproject.features.to.ui
 
 import android.annotation.SuppressLint
 import android.app.SearchManager
+import android.content.Intent
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.graphics.Color
@@ -20,6 +21,7 @@ import com.chkan.firstproject.R
 import com.chkan.firstproject.data.network.ApiResult
 import com.chkan.firstproject.data.network.model.ResponseGson
 import com.chkan.firstproject.databinding.FragmentToBinding
+import com.chkan.firstproject.features.resultMap.ui.ResultMapActivity
 import com.chkan.firstproject.utils.Constans
 import com.chkan.firstproject.utils.hideKeyboard
 import com.chkan.firstproject.viewmodels.MainViewModel
@@ -54,7 +56,9 @@ class ToFragment : Fragment() {
         initSearchView(binding.searchTo)
 
         binding.btnTo.setOnClickListener {
-            viewModel.getDirections()
+            //viewModel.getDirections()
+            val intent = Intent(context, ResultMapActivity::class.java)
+            startActivity(intent)
         }
 
         viewModel.listForSuggestionLiveData.observe(viewLifecycleOwner, {
