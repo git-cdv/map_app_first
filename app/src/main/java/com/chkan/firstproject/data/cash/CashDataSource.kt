@@ -1,6 +1,5 @@
 package com.chkan.firstproject.data.cash
 
-import android.util.Log
 import com.chkan.firstproject.data.network.model.autocomplete.Prediction
 
 object CashDataSource {
@@ -11,6 +10,5 @@ object CashDataSource {
         set(value) {
             placesMutableList.clear()
             placesMutableList.addAll(value)
-            Log.d("MYAPP", "CashDataSource - places: $placesMutableList")
         }
 }

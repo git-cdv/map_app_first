@@ -20,7 +20,7 @@
         android:id="@+id/searchFrom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:queryHint="Enter place"
+        android:queryHint="@string/search"
         android:iconifiedByDefault="false"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"

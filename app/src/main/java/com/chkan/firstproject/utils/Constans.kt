@@ -6,5 +6,6 @@ object Constans {
         "AIzaSyAXrI3OF_DmXo-r6V_klQE_3mPEiZ4lIlo"
     const val API_KEY_PLACE =
         "AIzaSyDqZrvLSzC0NqsqxgxpVXdVgFyV_VhP4a4"
-
+    const val WHO_FROM = 101
+    const val WHO_TO = 102
 }

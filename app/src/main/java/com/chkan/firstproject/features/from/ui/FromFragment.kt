@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.SearchManager
 import android.database.Cursor
 import android.database.MatrixCursor
-import android.graphics.Color
 import android.os.Bundle
 import android.provider.BaseColumns
 import android.util.Log
@@ -17,11 +16,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import com.chkan.firstproject.R
-import com.chkan.firstproject.data.network.ApiDetailResult
-import com.chkan.firstproject.data.network.ApiPlaceResult
-import com.chkan.firstproject.data.network.model.autocomplete.Prediction
 import com.chkan.firstproject.databinding.FragmentFromBinding
+import com.chkan.firstproject.utils.Constans
 import com.chkan.firstproject.utils.hideKeyboard
 import com.chkan.firstproject.viewmodels.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -29,7 +27,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.snackbar.Snackbar
+
 
 class FromFragment : Fragment() {
 
@@ -54,16 +52,15 @@ class FromFragment : Fragment() {
                     suggestions = it
                 })
 
-        viewModel.latLngSelectedPlaceLiveData.observe(viewLifecycleOwner, {
-                    addStart(it)
-                    mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15F))
+        viewModel.latLngSelectedPlaceFromLiveData.observe(viewLifecycleOwner, {
+                addStart(it)
+                mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15F))
         })
 
         if (mapFragment == null) {
             mapFragment = SupportMapFragment.newInstance()
             mapFragment!!.getMapAsync { map ->
                 mapObject = map
-                // добавляем маркер по координатам и "фокусируемся" на нем
                 val latLngWork = LatLng(47.84303067630826, 35.13851845689717)
                 val zoomLevel = 15f
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngWork, zoomLevel))
@@ -85,7 +82,6 @@ class FromFragment : Fragment() {
 
     private fun initSearchView(searchView: SearchView) {
 
-        searchView.queryHint = getString(R.string.search)
         searchView.findViewById<AutoCompleteTextView>(R.id.search_src_text).threshold = 3
 
         val from = arrayOf(SearchManager.SUGGEST_COLUMN_TEXT_1)
@@ -131,7 +127,7 @@ class FromFragment : Fragment() {
                 val selection = cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1))
                 searchView.setQuery(selection, false)
 
-                viewModel.getLatLngSelectedPlace(selection)
+                viewModel.getLatLngSelectedPlace(Constans.WHO_FROM, selection)
 
                 return true
             }

@@ -27,7 +27,6 @@ class MainViewModel : ViewModel(){
 
     lateinit var latLngStart: LatLng
     lateinit var latLngFinish: LatLng
-    var listPlaces : List<Prediction> = listOf()
 
     private val _apiResult = MutableLiveData<ApiResult>()
     val apiResult: LiveData<ApiResult>
@@ -37,9 +36,13 @@ class MainViewModel : ViewModel(){
     val listForSuggestionLiveData: LiveData<MutableList<String>>
         get() = _listForSuggestionLiveData
 
-    private val _latLngSelectedPlaceLiveData = MutableLiveData<LatLng>()
-    val latLngSelectedPlaceLiveData: LiveData<LatLng>
-        get() = _latLngSelectedPlaceLiveData
+    private val _latLngSelectedPlaceFromLiveData = MutableLiveData<LatLng>()
+    val latLngSelectedPlaceFromLiveData: LiveData<LatLng>
+        get() = _latLngSelectedPlaceFromLiveData
+
+    private val _latLngSelectedPlaceToLiveData = MutableLiveData<LatLng>()
+    val latLngSelectedPlaceToLiveData: LiveData<LatLng>
+        get() = _latLngSelectedPlaceToLiveData
 
     private val isErrorMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val isErrorLiveData: LiveData<Boolean>
@@ -75,17 +78,20 @@ class MainViewModel : ViewModel(){
         }
     }
 
-    fun getLatLngSelectedPlace(name: String?) {
+    fun getLatLngSelectedPlace(who:Int, name: String?) {
         viewModelScope.launch {
             val result = getLatLngSelectedPlaceUseCase.getLatLngSelectedPlace(name)
-            Log.d("MYAPP", "MainViewModel - getLatLngSelectedPlace() - RESULT: $result")
-            updateLatLngSelectedPlaceLiveData(result)
+            updateLatLngSelectedPlaceLiveData(who, result)
         }
     }
 
-    private fun updateLatLngSelectedPlaceLiveData(result: Result<LatLng>) {
+    private fun updateLatLngSelectedPlaceLiveData(who: Int, result: Result<LatLng>) {
         if (result.resultType==ResultType.SUCCESS) {
-            _latLngSelectedPlaceLiveData.value = result.data!!
+            if(who==Constans.WHO_FROM){
+                _latLngSelectedPlaceFromLiveData.value = result.data!!
+            } else {
+                _latLngSelectedPlaceToLiveData.value = result.data!!
+            }
             // TODO: Handle case with NULL
         } else {
             onResultError()
