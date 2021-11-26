@@ -1,4 +1,4 @@
-package com.chkan.firstproject.ui
+package com.chkan.firstproject.features.from.ui
 
 import android.annotation.SuppressLint
 import android.app.SearchManager
@@ -30,7 +30,6 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
-import java.util.*
 
 class FromFragment : Fragment() {
 
@@ -52,22 +51,10 @@ class FromFragment : Fragment() {
 
         initSearchView(binding.searchFrom)
 
-        viewModel.apiPlaceResult.observe(viewLifecycleOwner, {
-            when(it){
-                is ApiPlaceResult.Success -> {
-                    listPlaces = it.data.listPlaces
-                    val set = mutableSetOf<String>()
-                    for (item in listPlaces) {
-                        set.add(item.name)
-                    }
-                    suggestions = set.toMutableList()
-                }
-                is ApiPlaceResult.Error -> {
-                    val snackbar = Snackbar.make(binding.root, resources.getText(R.string.error_text), Snackbar.LENGTH_LONG)
-                    snackbar.setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show()
-                }
-            }
-        })
+        viewModel.listForSuggestionLiveData.observe(viewLifecycleOwner, {
+                    suggestions = it
+                })
+
 
         viewModel.apiDetailResult.observe(viewLifecycleOwner, {
             when(it){
@@ -104,7 +91,6 @@ class FromFragment : Fragment() {
         return binding.root
     }
 
-    //создаем маркер при долгом нажатии
     private fun setMapLongClick(map: GoogleMap) {
         map.setOnMapLongClickListener { latLng ->
             addStart(latLng)
@@ -132,16 +118,18 @@ class FromFragment : Fragment() {
 
                 if (query != null && query.length>2) {//если строка поиска не пута и имеет больше 2 символов
 
-                    viewModel.getListPlaces(query)
+                    viewModel.getListForSuggestion(query)
 
                     Log.d("MYAPP", "onQueryTextChange - ${query.length}")
                 }
                 val cursor = MatrixCursor(arrayOf(BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1))
                 query?.let {
                     Log.d("MYAPP", "suggestions - $suggestions")
-                    suggestions.forEachIndexed { index, suggestion ->
-                        if (suggestion.contains(query, true))
-                            cursor.addRow(arrayOf(index, suggestion))
+
+                    //перебор элементов, предоставляя последовательный индекс с элементом
+                    suggestions.forEachIndexed { index, value ->
+                        if (value.contains(query, true))//если вводимое значение есть в
+                            cursor.addRow(arrayOf(index, value))
                     }
                 }
 
@@ -174,19 +162,10 @@ class FromFragment : Fragment() {
 
         viewModel.checkStart(latLng)
 
-        // A snippet is additional text that's displayed after the title.
-        val snippet = String.format(
-            Locale.getDefault(),
-            "Lat: %1$.5f, Long: %2$.5f",
-            latLng.latitude,
-            latLng.longitude
-        )
-
         mapObject.addMarker(
             MarkerOptions()
                 .position(latLng)
-                .title(getString(R.string.dropped_start))//тайтл для снипета
-                .snippet(snippet)//текст для снипета
+                .title(getString(R.string.dropped_start))
         )
     }
 

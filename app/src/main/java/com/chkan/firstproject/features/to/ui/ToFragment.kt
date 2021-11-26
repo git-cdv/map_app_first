@@ -1,4 +1,4 @@
-package com.chkan.firstproject.ui
+package com.chkan.firstproject.features.to.ui
 
 import android.graphics.Color
 import android.os.Bundle
@@ -7,8 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import com.chkan.firstproject.R
 import com.chkan.firstproject.data.network.ApiResult
@@ -18,7 +16,6 @@ import com.chkan.firstproject.viewmodels.MainViewModel
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions

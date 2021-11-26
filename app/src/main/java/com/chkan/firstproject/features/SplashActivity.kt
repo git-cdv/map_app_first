@@ -1,4 +1,4 @@
-package com.chkan.firstproject.ui
+package com.chkan.firstproject.features
 
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity

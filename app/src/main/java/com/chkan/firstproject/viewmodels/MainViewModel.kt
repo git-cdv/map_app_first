@@ -5,16 +5,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chkan.firstproject.data.datatype.Result
+import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.data.network.Api
 import com.chkan.firstproject.data.network.ApiDetailResult
 import com.chkan.firstproject.data.network.ApiPlaceResult
 import com.chkan.firstproject.data.network.ApiResult
 import com.chkan.firstproject.data.network.model.autocomplete.Prediction
+import com.chkan.firstproject.features.from.usecase.GetListForSuggestionUseCase
 import com.chkan.firstproject.utils.Constans
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel(){
+
+    ////change in Hilt
+    private val suggestionUseCase = GetListForSuggestionUseCase()
+
+    ////
 
     lateinit var latLngStart: LatLng
     lateinit var latLngFinish: LatLng
@@ -24,13 +33,17 @@ class MainViewModel : ViewModel(){
     val apiResult: LiveData<ApiResult>
         get() = _apiResult
 
-    private val _apiPlaceResult = MutableLiveData<ApiPlaceResult>()
-    val apiPlaceResult: LiveData<ApiPlaceResult>
-        get() = _apiPlaceResult
+    private val _listForSuggestionLiveData = MutableLiveData<MutableList<String>>()
+    val listForSuggestionLiveData: LiveData<MutableList<String>>
+        get() = _listForSuggestionLiveData
 
     private val _apiDetailResult = MutableLiveData<ApiDetailResult>()
     val apiDetailResult: LiveData<ApiDetailResult>
         get() = _apiDetailResult
+
+    private val isErrorMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    val isErrorLiveData: LiveData<Boolean>
+        get() = isErrorMutableLiveData
 
     fun getDirections(){
         viewModelScope.launch {
@@ -55,17 +68,10 @@ class MainViewModel : ViewModel(){
         latLngFinish = latLng
     }
 
-    fun getListPlaces(query: String) {
+    fun getListForSuggestion(query: String) {//need return MutableList<String> through LiveData
         viewModelScope.launch {
-            try {
-                val response = Api.retrofitService.getListPlaces(query,Constans.API_KEY_PLACE)
-                _apiPlaceResult.value = ApiPlaceResult.Success(response)
-                listPlaces = response.listPlaces
-                Log.d("MYAPP", "MainViewModel - getListPlaces: ${response.listPlaces}")
-            }catch (e: Exception) {
-                _apiPlaceResult.value = ApiPlaceResult.Error(e)
-                Log.d("MYAPP", "MainViewModel - getListPlaces: $e")
-            }
+            val result = suggestionUseCase.getListForSuggestionUseCase(query)
+            updateListForSuggestionLiveData(result)
         }
     }
 
@@ -88,5 +94,26 @@ class MainViewModel : ViewModel(){
         }
 
     }
+
+    private fun updateListForSuggestionLiveData(result: Result<MutableList<String>>) {
+        if (result.resultType==ResultType.SUCCESS) {
+            _listForSuggestionLiveData.value = result.data!!
+            // TODO: Handle case with NULL
+        } else {
+            onResultError()
+        }
+    }
+
+    private fun onResultError() {
+        viewModelScope.launch {
+            delay(300)
+            // TODO: Handle case with Loading
+            //isLoadingLiveData(false)
+        }.invokeOnCompletion {
+            isErrorMutableLiveData.value = true
+            // TODO: Create notification in UI
+        }
+    }
+
 
 }

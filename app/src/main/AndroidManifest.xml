@@ -19,7 +19,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ui.SplashActivity"
+            android:name=".features.SplashActivity"
             android:exported="true"
             android:noHistory="true"
             android:screenOrientation="portrait">
