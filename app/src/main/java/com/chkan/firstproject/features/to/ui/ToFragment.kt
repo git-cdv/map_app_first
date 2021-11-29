@@ -28,6 +28,7 @@ import com.chkan.firstproject.utils.Constans
 import com.chkan.firstproject.utils.Constans.LATLNG_FINISH
 import com.chkan.firstproject.utils.Constans.LATLNG_START
 import com.chkan.firstproject.utils.hideKeyboard
+import com.chkan.firstproject.utils.toStringModel
 import com.chkan.firstproject.viewmodels.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -62,7 +63,7 @@ class ToFragment : Fragment() {
         binding.btnTo.setOnClickListener {
 
             val intent = Intent(context, ResultMapActivity::class.java).apply {
-                val start = "${viewModel.latLngStart.latitude},${viewModel.latLngStart.longitude}"
+                val start = viewModel.latLngStart.toStringModel()
                 val finish = "${viewModel.latLngFinish.latitude},${viewModel.latLngFinish.longitude}"
                 putExtra(LATLNG_START, start)
                 putExtra(LATLNG_FINISH, finish)
@@ -99,7 +100,6 @@ class ToFragment : Fragment() {
         viewModel.latLngSelectedPlaceToLiveData.observe(viewLifecycleOwner, {
                 addFinish(it)
                 mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15F))
-
         })
 
         childFragmentManager.beginTransaction().replace(R.id.mapTo, mapFragment!!).commit()
@@ -130,7 +130,6 @@ class ToFragment : Fragment() {
                 .position(latLng)
                 .title(getString(R.string.dropped_finish))
         )
-
     }
 
     private fun initSearchView(searchView: SearchView) {

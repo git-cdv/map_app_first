@@ -6,6 +6,7 @@ import com.chkan.firstproject.data.datatype.Result
 import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.features.from.usecase.GetLatLngSelectedPlaceUseCase
 import com.chkan.firstproject.features.from.usecase.GetListForSuggestionUseCase
+import com.chkan.firstproject.features.from.usecase.SaveSelectedPlaceUseCase
 import com.chkan.firstproject.utils.Constans
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.delay
@@ -20,6 +21,7 @@ class MainViewModel : ViewModel(){
     ////change in Hilt
     private val getListForSuggestionUseCase = GetListForSuggestionUseCase()
     private val getLatLngSelectedPlaceUseCase = GetLatLngSelectedPlaceUseCase()
+    private val saveSelectedPlaceUseCase = SaveSelectedPlaceUseCase()
     ////
 
     lateinit var latLngStart: LatLng
@@ -74,6 +76,7 @@ class MainViewModel : ViewModel(){
         viewModelScope.launch {
             val result = getLatLngSelectedPlaceUseCase.getLatLngSelectedPlace(name)
             updateLatLngSelectedPlaceLiveData(who, result)
+            saveSelectedPlaceUseCase.savePlace(name,result.data)
         }
     }
 

@@ -44,6 +44,7 @@ dependencies {
     //coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
+
     //lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
@@ -52,6 +53,9 @@ dependencies {
     // Retrofit with gson Converter
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+
+    //kotlinx-serialization
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
 
     //viewpager
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
@@ -66,3 +70,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
+
+apply plugin: 'kotlinx-serialization'

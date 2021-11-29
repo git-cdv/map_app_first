@@ -17,12 +17,15 @@ fun Fragment.hideKeyboard() {
     }
 }
 
-fun String.toLatLng(text: String) : LatLng {
+fun String.toLatLng() : LatLng {
 
-    val latlong = text.split(",").toTypedArray()
+    val latlong = this.split(",").toTypedArray()
     val latitude = latlong[0].toDouble()
     val longitude = latlong[1].toDouble()
 
     return LatLng(latitude, longitude)
+}
 
+fun LatLng.toStringModel() : String {
+    return "${this.latitude},${this.longitude}"
 }

@@ -44,13 +44,13 @@ class ResultMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
             if (latLngStart!=null&&latLngFinish!=null) {
 
-                val start = latLngStart.toLatLng(latLngStart)
+                val start = latLngStart.toLatLng()
 
                 val markerFrom = MarkerOptions()
                     .position(start)
                     .title("Start")
                 val markerTo = MarkerOptions()
-                    .position(latLngFinish.toLatLng(latLngFinish))
+                    .position(latLngFinish.toLatLng())
                     .title("Finish")
 
                 map.addMarker(markerFrom)
