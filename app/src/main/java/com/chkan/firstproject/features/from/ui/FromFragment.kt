@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.SearchManager
 import android.database.Cursor
 import android.database.MatrixCursor
+import android.graphics.Color
 import android.os.Bundle
 import android.provider.BaseColumns
 import android.util.Log
@@ -18,6 +19,7 @@ import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import com.chkan.firstproject.R
+import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.databinding.FragmentFromBinding
 import com.chkan.firstproject.utils.Constans
 import com.chkan.firstproject.utils.hideKeyboard
@@ -27,6 +29,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 
 
 class FromFragment : Fragment() {
@@ -48,13 +51,21 @@ class FromFragment : Fragment() {
 
         initSearchView(binding.searchFrom)
 
-        viewModel.listForSuggestionLiveData.observe(viewLifecycleOwner, {
-                    suggestions = it
-                })
+        viewModel.searchSuggestion.observe(viewLifecycleOwner, {
+            when(it.resultType){
+                ResultType.SUCCESS -> suggestions = it.data!!
+                ResultType.ERROR -> showError()
+                else ->  Log.d("MYAPP", "FromFragment - searchSuggestion: $it")
+            }
+        })
 
         viewModel.latLngSelectedPlaceFromLiveData.observe(viewLifecycleOwner, {
                 addStart(it)
                 mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15F))
+        })
+
+        viewModel.isErrorLiveData.observe(viewLifecycleOwner, {
+            if(it) showError()
         })
 
         if (mapFragment == null) {
@@ -72,6 +83,15 @@ class FromFragment : Fragment() {
         childFragmentManager.beginTransaction().replace(R.id.map, mapFragment!!).commit()
 
         return binding.root
+    }
+
+    private fun showError() {
+        val snackbar = Snackbar.make(
+            binding.root,
+            resources.getText(R.string.error_text),
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show()
     }
 
     private fun setMapLongClick(map: GoogleMap) {
@@ -97,9 +117,8 @@ class FromFragment : Fragment() {
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
-
-                if (query != null && query.length>2) {//если строка поиска не пута и имеет больше 2 символов
-                    viewModel.getListForSuggestion(query)
+                if (query != null) {
+                    viewModel.onNewQuery(query)
                 }
                 val cursor = MatrixCursor(arrayOf(BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1))
                 query?.let {

@@ -16,5 +16,10 @@ data class Result<out T>(
         fun <T> error(error: Exception? = null): Result<T> {
             return Result(ResultType.ERROR, error = error)
         }
+
+        fun <T> empty(): Result<T> {
+            return Result(ResultType.EMPTY)
+        }
+
     }
 }

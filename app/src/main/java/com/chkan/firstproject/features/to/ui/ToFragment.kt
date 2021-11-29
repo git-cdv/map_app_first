@@ -8,6 +8,7 @@ import android.database.MatrixCursor
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.BaseColumns
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.activityViewModels
 import com.chkan.firstproject.R
+import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.data.network.ApiResult
 import com.chkan.firstproject.data.network.model.ResponseGson
 import com.chkan.firstproject.databinding.FragmentToBinding
@@ -68,8 +70,16 @@ class ToFragment : Fragment() {
             startActivity(intent)
         }
 
-        viewModel.listForSuggestionLiveData.observe(viewLifecycleOwner, {
-            suggestions = it
+        viewModel.searchSuggestion.observe(viewLifecycleOwner, {
+            when(it.resultType){
+                ResultType.SUCCESS -> suggestions = it.data!!
+                ResultType.ERROR -> showError()
+                else ->  Log.d("MYAPP", "FromFragment - searchSuggestion: $it")
+            }
+        })
+
+        viewModel.isErrorLiveData.observe(viewLifecycleOwner, {
+             if(it) showError()
         })
 
         if (mapFragment == null) {
@@ -97,6 +107,15 @@ class ToFragment : Fragment() {
         return binding.root
     }
 
+    private fun showError() {
+        val snackbar = Snackbar.make(
+            binding.root,
+            resources.getText(R.string.error_text),
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show()
+    }
+
     //создаем маркер при долгом нажатии
     private fun setMapLongClick(map: GoogleMap) {
         map.setOnMapLongClickListener { latLng ->
@@ -116,7 +135,7 @@ class ToFragment : Fragment() {
 
     private fun initSearchView(searchView: SearchView) {
 
-        searchView.findViewById<AutoCompleteTextView>(R.id.search_src_text).threshold = 3
+        searchView.findViewById<AutoCompleteTextView>(R.id.search_src_text).threshold = 2
 
         val from = arrayOf(SearchManager.SUGGEST_COLUMN_TEXT_1)
         val to = intArrayOf(R.id.item_label)
@@ -138,9 +157,8 @@ class ToFragment : Fragment() {
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
-
-                if (query != null && query.length > 2) {//если строка поиска не пута и имеет больше 2 символов
-                    viewModel.getListForSuggestion(query)
+                if (query != null) {
+                    viewModel.onNewQuery(query)
                 }
                 val cursor =
                     MatrixCursor(arrayOf(BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1))

@@ -1,21 +1,18 @@
 package com.chkan.firstproject.viewmodels
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.chkan.firstproject.data.datatype.Result
 import com.chkan.firstproject.data.datatype.ResultType
-import com.chkan.firstproject.data.network.Api
-import com.chkan.firstproject.data.network.ApiDetailResult
-import com.chkan.firstproject.data.network.ApiResult
-import com.chkan.firstproject.data.network.model.autocomplete.Prediction
 import com.chkan.firstproject.features.from.usecase.GetLatLngSelectedPlaceUseCase
 import com.chkan.firstproject.features.from.usecase.GetListForSuggestionUseCase
 import com.chkan.firstproject.utils.Constans
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel(){
@@ -28,9 +25,25 @@ class MainViewModel : ViewModel(){
     lateinit var latLngStart: LatLng
     lateinit var latLngFinish: LatLng
 
-    private val _listForSuggestionLiveData = MutableLiveData<MutableList<String>>()
-    val listForSuggestionLiveData: LiveData<MutableList<String>>
-        get() = _listForSuggestionLiveData
+    private val queryFlow = MutableStateFlow("")
+
+    init {
+        viewModelScope.launch {
+            queryFlow
+                .sample(500L)
+                .mapLatest(::getSuggestion)
+                .collect { result -> _searchSuggestion.value = result}
+        }
+    }
+
+    fun onNewQuery(query: String) {
+        queryFlow.value = query
+    }
+
+    private val _searchSuggestion = MutableStateFlow <Result<MutableList<String>>>(Result.empty())
+    val searchSuggestion: LiveData<Result<MutableList<String>>>
+        get() = _searchSuggestion
+            .asLiveData(viewModelScope.coroutineContext)
 
     private val _latLngSelectedPlaceFromLiveData = MutableLiveData<LatLng>()
     val latLngSelectedPlaceFromLiveData: LiveData<LatLng>
@@ -40,9 +53,9 @@ class MainViewModel : ViewModel(){
     val latLngSelectedPlaceToLiveData: LiveData<LatLng>
         get() = _latLngSelectedPlaceToLiveData
 
-    private val isErrorMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val _isErrorLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val isErrorLiveData: LiveData<Boolean>
-        get() = isErrorMutableLiveData
+        get() = _isErrorLiveData
 
     fun checkStart(latLng: LatLng) {
         latLngStart = latLng
@@ -52,11 +65,9 @@ class MainViewModel : ViewModel(){
         latLngFinish = latLng
     }
 
-    fun getListForSuggestion(query: String) {
-        viewModelScope.launch {
-            val result = getListForSuggestionUseCase.getListForSuggestionUseCase(query)
-            updateListForSuggestionLiveData(result)
-        }
+    private suspend fun getSuggestion(query: String): Result<MutableList<String>> {
+        Log.d("MYAPP", "MainViewModel - getSuggestion: query $query")
+        return getListForSuggestionUseCase.getListForSuggestionUseCase(query)
     }
 
     fun getLatLngSelectedPlace(who:Int, name: String?) {
@@ -79,22 +90,13 @@ class MainViewModel : ViewModel(){
         }
     }
 
-    private fun updateListForSuggestionLiveData(result: Result<MutableList<String>>) {
-        if (result.resultType==ResultType.SUCCESS) {
-            _listForSuggestionLiveData.value = result.data!!
-            // TODO: Handle case with NULL
-        } else {
-            onResultError()
-        }
-    }
-
     private fun onResultError() {
         viewModelScope.launch {
             delay(300)
             // TODO: Handle case with Loading
             //isLoadingLiveData(false)
         }.invokeOnCompletion {
-            isErrorMutableLiveData.value = true
+            _isErrorLiveData.value = true
             // TODO: Create notification in UI
         }
     }
