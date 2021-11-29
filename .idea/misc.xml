@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Projects/FirstProject/app/src/main/res/drawable/ic_close.xml" value="0.5703125" />
         <entry key="..\:/Projects/FirstProject/app/src/main/res/drawable/searchview_backgound.xml" value="0.5703125" />
         <entry key="..\:/Projects/FirstProject/app/src/main/res/layout/activity_main.xml" value="0.5541666666666667" />
         <entry key="..\:/Projects/FirstProject/app/src/main/res/layout/activity_result_map.xml" value="0.5541666666666667" />

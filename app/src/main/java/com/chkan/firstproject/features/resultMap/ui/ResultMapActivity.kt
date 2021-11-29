@@ -18,6 +18,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.snackbar.Snackbar
 
 class ResultMapActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -72,21 +73,15 @@ class ResultMapActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.mapResult) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        val toolbar : MaterialToolbar = findViewById(R.id.result_toolbar)
+        toolbar.setNavigationOnClickListener {finish()}
+
     }
 
     override fun onMapReady(googleMap: GoogleMap) { //коллбек после загрузки карты
         map = googleMap
-
-        val latitude = 47.7821235847204
-        val longitude = 35.17682959203426
-        val zoomLevel = 15f
-
-        // добавляем маркер по координатам и "фокусируемся" на нем
-        val homeLatLng = LatLng(latitude, longitude)
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
-        map.addMarker(MarkerOptions().position(homeLatLng))
-
-        //enableMyLocation()
+        enableMyLocation()
     }
 
     private fun enableMyLocation() {

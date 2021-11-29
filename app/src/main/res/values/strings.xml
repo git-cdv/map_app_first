@@ -13,4 +13,5 @@
     <string name="error_text">Unknown</string>
     <string name="ok_text">Found</string>
     <string name="search">Поиск локации</string>
+    <string name="our_rout">Ваш маршрут</string>
 </resources>
