@@ -2,22 +2,30 @@ package com.chkan.firstproject.features.resultMap.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import com.chkan.firstproject.R
 import com.chkan.firstproject.databinding.ActivityResultMapBinding
+import com.chkan.firstproject.features.resultMap.viewmodel.ResultViewModel
+import com.chkan.firstproject.utils.Constans
+import com.chkan.firstproject.utils.toLatLng
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 
 class ResultMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private lateinit var binding: ActivityResultMapBinding
+    private val viewModel: ResultViewModel by viewModels()
+
 
     private val REQUEST_LOCATION_PERMISSION = 1
 
@@ -26,6 +34,40 @@ class ResultMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding = ActivityResultMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val latLngStart = intent.getStringExtra(Constans.LATLNG_START)
+        val latLngFinish = intent.getStringExtra(Constans.LATLNG_FINISH)
+
+        if (latLngStart!=null&&latLngFinish!=null){viewModel.getRout(latLngStart,latLngFinish)}
+
+        viewModel.polylineLiveData.observe(this, {
+
+            if (latLngStart!=null&&latLngFinish!=null) {
+
+                val start = latLngStart.toLatLng(latLngStart)
+
+                val markerFrom = MarkerOptions()
+                    .position(start)
+                    .title("Start")
+                val markerTo = MarkerOptions()
+                    .position(latLngFinish.toLatLng(latLngFinish))
+                    .title("Finish")
+
+                map.addMarker(markerFrom)
+                map.addMarker(markerTo)
+
+                map.addPolyline(it)
+
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(start, 15f))
+
+                val snackbar = Snackbar.make(
+                    binding.root,
+                    resources.getText(R.string.ok_text),
+                    Snackbar.LENGTH_LONG
+                )
+                snackbar.setBackgroundTint(Color.BLACK).setTextColor(Color.WHITE).show()
+            }
+                })
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.mapResult) as SupportMapFragment

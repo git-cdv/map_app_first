@@ -23,6 +23,8 @@ import com.chkan.firstproject.data.network.model.ResponseGson
 import com.chkan.firstproject.databinding.FragmentToBinding
 import com.chkan.firstproject.features.resultMap.ui.ResultMapActivity
 import com.chkan.firstproject.utils.Constans
+import com.chkan.firstproject.utils.Constans.LATLNG_FINISH
+import com.chkan.firstproject.utils.Constans.LATLNG_START
 import com.chkan.firstproject.utils.hideKeyboard
 import com.chkan.firstproject.viewmodels.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -56,8 +58,13 @@ class ToFragment : Fragment() {
         initSearchView(binding.searchTo)
 
         binding.btnTo.setOnClickListener {
-            //viewModel.getDirections()
-            val intent = Intent(context, ResultMapActivity::class.java)
+
+            val intent = Intent(context, ResultMapActivity::class.java).apply {
+                val start = "${viewModel.latLngStart.latitude},${viewModel.latLngStart.longitude}"
+                val finish = "${viewModel.latLngFinish.latitude},${viewModel.latLngFinish.longitude}"
+                putExtra(LATLNG_START, start)
+                putExtra(LATLNG_FINISH, finish)
+            }
             startActivity(intent)
         }
 
@@ -79,35 +86,6 @@ class ToFragment : Fragment() {
             }
         }
 
-        viewModel.apiResult.observe(viewLifecycleOwner, {
-            when(it){
-                is ApiResult.Success -> {
-
-                    val markerFrom = MarkerOptions()
-                        .position(viewModel.latLngStart)
-                        .title("Start")
-                    val markerTo = MarkerOptions()
-                        .position(viewModel.latLngFinish)
-                        .title("Finish")
-
-                    mapObject.addMarker(markerFrom)
-                    mapObject.addMarker(markerTo)
-
-                    drawDestination(it.data)
-
-                    mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(viewModel.latLngStart, 15f))
-
-                    val snackbar = Snackbar.make(binding.root, resources.getText(R.string.ok_text), Snackbar.LENGTH_LONG)
-                    snackbar.setBackgroundTint(Color.BLACK).setTextColor(Color.WHITE).show()
-
-                }
-                is ApiResult.Error -> {
-                    val snackbar = Snackbar.make(binding.root, resources.getText(R.string.error_text), Snackbar.LENGTH_LONG)
-                    snackbar.setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show()
-                }
-            }
-        })
-
         viewModel.latLngSelectedPlaceToLiveData.observe(viewLifecycleOwner, {
                 addFinish(it)
                 mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15F))
@@ -117,15 +95,6 @@ class ToFragment : Fragment() {
         childFragmentManager.beginTransaction().replace(R.id.mapTo, mapFragment!!).commit()
 
         return binding.root
-    }
-
-    private fun drawDestination(data: ResponseGson) {
-        val shape = data.routes.get(0).overviewPolyline.points
-        val polyline = PolylineOptions()
-            .addAll(PolyUtil.decode(shape))
-            .width(8f)
-            .color(Color.BLACK)
-        mapObject.addPolyline(polyline)
     }
 
     //создаем маркер при долгом нажатии
