@@ -18,6 +18,7 @@ import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import com.chkan.firstproject.MainActivity
 import com.chkan.firstproject.R
 import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.databinding.FragmentFromBinding
@@ -50,6 +51,10 @@ class FromFragment : Fragment() {
         _binding = FragmentFromBinding.inflate(inflater, container, false)
 
         initSearchView(binding.searchFrom)
+
+        binding.tvHistoryFrom.setOnClickListener {
+            (activity as MainActivity).getBottomSheet(Constans.WHO_FROM)
+        }
 
         viewModel.searchSuggestion.observe(viewLifecycleOwner, {
             when(it.resultType){
@@ -155,9 +160,8 @@ class FromFragment : Fragment() {
     }
 
     private fun addStart(latLng: LatLng) {
-
         viewModel.checkStart(latLng)
-
+        mapObject.clear()
         mapObject.addMarker(
             MarkerOptions()
                 .position(latLng)

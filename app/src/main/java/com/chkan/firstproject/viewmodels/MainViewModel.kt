@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.chkan.firstproject.data.datatype.Result
 import com.chkan.firstproject.data.datatype.ResultType
+import com.chkan.firstproject.data.local.LocalModel
 import com.chkan.firstproject.features.from.usecase.GetLatLngSelectedPlaceUseCase
 import com.chkan.firstproject.features.from.usecase.GetListForSuggestionUseCase
 import com.chkan.firstproject.features.from.usecase.SaveSelectedPlaceUseCase
@@ -21,12 +22,16 @@ class MainViewModel : ViewModel(){
     ////change in Hilt
     private val getListForSuggestionUseCase = GetListForSuggestionUseCase()
     private val getLatLngSelectedPlaceUseCase = GetLatLngSelectedPlaceUseCase()
+    private val saveSelectedPlaceUseCase = SaveSelectedPlaceUseCase()
     ////
 
     lateinit var latLngStart: LatLng
     lateinit var latLngFinish: LatLng
     var nameStart: String = ""
     var nameFinish: String = ""
+
+    var listLocalModelFrom = arrayListOf<LocalModel>()
+    var listLocalModelTo = arrayListOf<LocalModel>()
 
     private val queryFlow = MutableStateFlow("")
 
@@ -81,7 +86,7 @@ class MainViewModel : ViewModel(){
         }
     }
 
-    private fun updateLatLngSelectedPlaceLiveData(who: Int, result: Result<LatLng>) {
+    fun updateLatLngSelectedPlaceLiveData(who: Int, result: Result<LatLng>) {
         if (result.resultType==ResultType.SUCCESS) {
             if(who==Constans.WHO_FROM){
                 _latLngSelectedPlaceFromLiveData.value = result.data!!
@@ -103,6 +108,21 @@ class MainViewModel : ViewModel(){
             _isErrorLiveData.value = true
             // TODO: Create notification in UI
         }
+    }
+
+    fun getListHistory(who: Int): Array<String> {
+        if(who==Constans.WHO_FROM) {
+            listLocalModelFrom = saveSelectedPlaceUseCase.getFromHistory(who)
+            return listLocalModelFrom.map {
+                it.name
+            }.toTypedArray()
+        } else {
+            listLocalModelTo = saveSelectedPlaceUseCase.getFromHistory(who)
+            return listLocalModelTo.map {
+                it.name
+            }.toTypedArray()
+        }
+
     }
 
 

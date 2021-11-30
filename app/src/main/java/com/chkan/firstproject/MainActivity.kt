@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.chkan.firstproject.databinding.ActivityMainBinding
+import com.chkan.firstproject.features.from.ui.FromBottomFragment
+import com.chkan.firstproject.features.to.ui.ToBottomFragment
+import com.chkan.firstproject.utils.Constans
 import com.chkan.firstproject.utils.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -28,6 +31,18 @@ class MainActivity : AppCompatActivity() {
             if (position==0){tab.text = "Откуда"}
             else {tab.text = "Куда"}
         }.attach()
+    }
+
+    fun getBottomSheet(who:Int) {
+        if (who == Constans.WHO_FROM) {
+            FromBottomFragment().apply {
+                show(supportFragmentManager, Constans.TAG_SHEET_FROM)
+            }
+        } else {
+            ToBottomFragment().apply {
+                show(supportFragmentManager, Constans.TAG_SHEET_TO)
+            }
+        }
     }
 
     override fun onBackPressed() {

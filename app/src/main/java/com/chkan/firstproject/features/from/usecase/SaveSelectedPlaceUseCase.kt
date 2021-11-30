@@ -62,4 +62,23 @@ class SaveSelectedPlaceUseCase {
         }
     }
 
+    fun getFromHistory(who: Int) : ArrayList<LocalModel> {
+        return if(who==Constans.WHO_FROM){
+            val modelListOfString = localDataSource.getString(Constans.PREF_LIST_START)
+            getListLocalModel(modelListOfString)
+        } else {
+            val modelListOfString = localDataSource.getString(Constans.PREF_LIST_FINISH)
+            getListLocalModel(modelListOfString)
+        }
+    }
+
+    private fun getListLocalModel(model: String?): ArrayList<LocalModel> {
+        return if (model != null) {
+            Json.decodeFromString(model)
+        } else{
+            arrayListOf(LocalModel("Пока нет сохранений",null))
+        }
+    }
+
+
 }

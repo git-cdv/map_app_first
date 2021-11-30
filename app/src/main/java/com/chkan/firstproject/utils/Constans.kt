@@ -15,4 +15,7 @@ object Constans {
 
     const val PREF_LIST_START = "list_start"
     const val PREF_LIST_FINISH = "list_finish"
+
+    const val TAG_SHEET_FROM = "FromBottomFragment"
+    const val TAG_SHEET_TO = "ToBottomFragment"
 }

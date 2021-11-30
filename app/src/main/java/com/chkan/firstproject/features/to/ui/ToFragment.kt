@@ -18,6 +18,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.activityViewModels
+import com.chkan.firstproject.MainActivity
 import com.chkan.firstproject.R
 import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.databinding.FragmentToBinding
@@ -57,6 +58,10 @@ class ToFragment : Fragment() {
         _binding = FragmentToBinding.inflate(inflater, container, false)
 
         initSearchView(binding.searchTo)
+
+        binding.tvHistoryTo.setOnClickListener {
+            (activity as MainActivity).getBottomSheet(Constans.WHO_TO)
+        }
 
         binding.btnTo.setOnClickListener {
 
@@ -125,6 +130,7 @@ class ToFragment : Fragment() {
 
     private fun addFinish(latLng: LatLng) {
         viewModel.checkFinish(latLng)
+        mapObject.clear()
         mapObject.addMarker(
             MarkerOptions()
                 .position(latLng)
