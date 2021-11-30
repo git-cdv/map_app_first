@@ -3,6 +3,7 @@ package com.chkan.firstproject.data.network
 import com.chkan.firstproject.data.network.model.ResponseGson
 import com.chkan.firstproject.data.network.model.autocomplete.ListPlacesModel
 import com.chkan.firstproject.data.network.model.detail.DetailPlaceModel
+import com.chkan.firstproject.data.network.model.geocode.GeocodeModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -31,6 +32,11 @@ interface ApiService {
     suspend fun getDetailPlace(@Query("place_id") place_id: String,
                                @Query("fields") fields: String="geometry/location",
                                @Query("key") apiKey: String): DetailPlaceModel
+
+    @GET("maps/api/geocode/json")
+    suspend fun getNameFromGeocode(@Query("latlng") latlng: String,
+                               @Query("location_type") location_type: String="ROOFTOP",
+                               @Query("key") apiKey: String): GeocodeModel
 }
 
 object Api {

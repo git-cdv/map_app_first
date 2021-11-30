@@ -6,6 +6,7 @@ import com.chkan.firstproject.data.network.exceptions.handleNetworkExceptions
 import com.chkan.firstproject.data.network.model.ResponseGson
 import com.chkan.firstproject.data.network.model.autocomplete.ListPlacesModel
 import com.chkan.firstproject.data.network.model.detail.DetailPlaceModel
+import com.chkan.firstproject.data.network.model.geocode.GeocodeModel
 import com.chkan.firstproject.utils.Constans
 import java.lang.Exception
 
@@ -41,6 +42,17 @@ class NetworkDataSource {
         } catch (e: Exception) {
             Result.error(handleNetworkExceptions(e))
         }
+    }
+
+    suspend fun getNameFromGeocoding(latLng: String) : Result<GeocodeModel> {
+        return try {
+            val model = Api.retrofitService.getNameFromGeocode(latlng = latLng,apiKey = Constans.API_KEY_PLACE )
+            Log.d("MYAPP", "NetworkDataSource - getNameFromGeocoding: ${model.results[0].formattedAddress}")
+            Result.success(model)
+        } catch (e: Exception) {
+            Result.error(handleNetworkExceptions(e))
+        }
+
     }
 
 
