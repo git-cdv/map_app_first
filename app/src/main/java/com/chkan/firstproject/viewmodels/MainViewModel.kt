@@ -113,16 +113,17 @@ class MainViewModel : ViewModel(){
     fun getListHistory(who: Int): Array<String> {
         if(who==Constans.WHO_FROM) {
             listLocalModelFrom = saveSelectedPlaceUseCase.getFromHistory(who)
+            listLocalModelFrom.reverse()
             return listLocalModelFrom.map {
                 it.name
             }.toTypedArray()
         } else {
             listLocalModelTo = saveSelectedPlaceUseCase.getFromHistory(who)
+            listLocalModelTo.reverse()
             return listLocalModelTo.map {
                 it.name
             }.toTypedArray()
         }
-
     }
 
 
