@@ -9,6 +9,7 @@ import com.chkan.firstproject.features.from.usecase.GetLatLngSelectedPlaceUseCas
 import com.chkan.firstproject.features.from.usecase.GetListForSuggestionUseCase
 import com.chkan.firstproject.features.from.usecase.SaveSelectedPlaceUseCase
 import com.chkan.firstproject.utils.Constans
+import com.chkan.firstproject.utils.toLatLng
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,8 +26,8 @@ class MainViewModel : ViewModel(){
     private val saveSelectedPlaceUseCase = SaveSelectedPlaceUseCase()
     ////
 
-    lateinit var latLngStart: LatLng
-    lateinit var latLngFinish: LatLng
+    var latLngStart: LatLng = "47.8723852,35.3004297".toLatLng()
+    var latLngFinish: LatLng = "50.4501,30.5234".toLatLng()
     var nameStart: String = ""
     var nameFinish: String = ""
 
