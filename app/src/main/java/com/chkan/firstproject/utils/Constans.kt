@@ -10,4 +10,7 @@ object Constans {
     const val WHO_TO = 102
     const val LATLNG_START = "lat_start"
     const val LATLNG_FINISH = "lat_finish"
+
+    const val PREF_LIST_START = "list_start"
+    const val PREF_LIST_FINISH = "list_finish"
 }

@@ -76,7 +76,7 @@ class MainViewModel : ViewModel(){
         viewModelScope.launch {
             val result = getLatLngSelectedPlaceUseCase.getLatLngSelectedPlace(name)
             updateLatLngSelectedPlaceLiveData(who, result)
-            saveSelectedPlaceUseCase.savePlace(name,result.data)
+            saveSelectedPlaceUseCase.savePlaceFromSearch(who,name,result.data)
         }
     }
 
