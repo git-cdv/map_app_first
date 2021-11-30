@@ -20,13 +20,13 @@ import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.activityViewModels
 import com.chkan.firstproject.R
 import com.chkan.firstproject.data.datatype.ResultType
-import com.chkan.firstproject.data.network.ApiResult
-import com.chkan.firstproject.data.network.model.ResponseGson
 import com.chkan.firstproject.databinding.FragmentToBinding
 import com.chkan.firstproject.features.resultMap.ui.ResultMapActivity
 import com.chkan.firstproject.utils.Constans
 import com.chkan.firstproject.utils.Constans.LATLNG_FINISH
 import com.chkan.firstproject.utils.Constans.LATLNG_START
+import com.chkan.firstproject.utils.Constans.NAME_FINISH
+import com.chkan.firstproject.utils.Constans.NAME_START
 import com.chkan.firstproject.utils.hideKeyboard
 import com.chkan.firstproject.utils.toStringModel
 import com.chkan.firstproject.viewmodels.MainViewModel
@@ -35,9 +35,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.snackbar.Snackbar
-import com.google.maps.android.PolyUtil
 
 
 class ToFragment : Fragment() {
@@ -63,10 +61,12 @@ class ToFragment : Fragment() {
         binding.btnTo.setOnClickListener {
 
             val intent = Intent(context, ResultMapActivity::class.java).apply {
-                val start = viewModel.latLngStart.toStringModel()
-                val finish = "${viewModel.latLngFinish.latitude},${viewModel.latLngFinish.longitude}"
-                putExtra(LATLNG_START, start)
-                putExtra(LATLNG_FINISH, finish)
+                putExtra(LATLNG_START, viewModel.latLngStart.toStringModel())
+                putExtra(LATLNG_FINISH, viewModel.latLngFinish.toStringModel())
+                Log.d("MYAPP", "btnTo - nameStart: ${viewModel.nameStart}")
+                Log.d("MYAPP", "btnTo - nameFinish: ${viewModel.nameFinish}")
+                putExtra(NAME_START, viewModel.nameStart)
+                putExtra(NAME_FINISH, viewModel.nameFinish)
             }
             startActivity(intent)
         }

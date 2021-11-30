@@ -37,8 +37,15 @@ class ResultMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val latLngStart = intent.getStringExtra(Constans.LATLNG_START)
         val latLngFinish = intent.getStringExtra(Constans.LATLNG_FINISH)
+        val nameStart = intent.getStringExtra(Constans.NAME_START)
+        val nameFinish = intent.getStringExtra(Constans.NAME_FINISH)
 
-        if (latLngStart!=null&&latLngFinish!=null){viewModel.getRout(latLngStart,latLngFinish)}
+        if (latLngStart!=null&&latLngFinish!=null){
+            viewModel.getRout(latLngStart,latLngFinish)
+            if (nameStart!=null&&nameFinish!=null) {
+                viewModel.saveLatLng(nameStart,latLngStart,nameFinish,latLngFinish)
+            }
+        }
 
         viewModel.polylineLiveData.observe(this, {
 

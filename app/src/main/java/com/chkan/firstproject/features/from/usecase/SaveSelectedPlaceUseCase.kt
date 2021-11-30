@@ -4,8 +4,10 @@ import android.util.Log
 import com.chkan.firstproject.data.local.LocalModel
 import com.chkan.firstproject.utils.Constans
 import com.chkan.firstproject.utils.MyApp
+import com.chkan.firstproject.utils.toLatLng
 import com.chkan.firstproject.utils.toStringModel
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -13,12 +15,12 @@ import kotlinx.serialization.json.Json
 class SaveSelectedPlaceUseCase {
 
     private val localDataSource = MyApp.localData
+    private val applicationScopeIO = MyApp.instance.applicationScopeIO
 
-    fun savePlaceFromSearch(who:Int,name: String?, latlng: LatLng?) {
-        if(who==Constans.WHO_FROM) {
-            saveInList(Constans.PREF_LIST_START,name,latlng)
-        } else {
-            saveInList(Constans.PREF_LIST_FINISH,name,latlng)
+    fun savePlace(nameStart: String, latLngStart: String, nameFinish: String, latLngFinish: String) {
+        applicationScopeIO.launch {
+            saveInList(Constans.PREF_LIST_START,nameStart,latLngStart.toLatLng())
+            saveInList(Constans.PREF_LIST_FINISH,nameFinish,latLngFinish.toLatLng())
         }
     }
 

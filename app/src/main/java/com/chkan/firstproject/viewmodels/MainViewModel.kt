@@ -21,11 +21,12 @@ class MainViewModel : ViewModel(){
     ////change in Hilt
     private val getListForSuggestionUseCase = GetListForSuggestionUseCase()
     private val getLatLngSelectedPlaceUseCase = GetLatLngSelectedPlaceUseCase()
-    private val saveSelectedPlaceUseCase = SaveSelectedPlaceUseCase()
     ////
 
     lateinit var latLngStart: LatLng
     lateinit var latLngFinish: LatLng
+    var nameStart: String = ""
+    var nameFinish: String = ""
 
     private val queryFlow = MutableStateFlow("")
 
@@ -75,8 +76,8 @@ class MainViewModel : ViewModel(){
     fun getLatLngSelectedPlace(who:Int, name: String?) {
         viewModelScope.launch {
             val result = getLatLngSelectedPlaceUseCase.getLatLngSelectedPlace(name)
+            if(who==Constans.WHO_FROM) nameStart = name.toString() else nameFinish = name.toString()
             updateLatLngSelectedPlaceLiveData(who, result)
-            saveSelectedPlaceUseCase.savePlaceFromSearch(who,name,result.data)
         }
     }
 
