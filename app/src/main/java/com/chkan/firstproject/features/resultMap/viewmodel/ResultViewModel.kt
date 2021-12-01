@@ -9,14 +9,16 @@ import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.features.from.usecase.SaveSelectedPlaceUseCase
 import com.chkan.firstproject.features.resultMap.usecase.GetPolylineForRouteUseCase
 import com.google.android.gms.maps.model.PolylineOptions
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ResultViewModel : ViewModel(){
-
-    ////change in Hilt
-    private val getPolylineForRouteUseCase = GetPolylineForRouteUseCase()
-    private val saveSelectedPlaceUseCase = SaveSelectedPlaceUseCase()
+@HiltViewModel
+class ResultViewModel @Inject constructor(
+            private val getPolylineForRouteUseCase : GetPolylineForRouteUseCase,
+            private val saveSelectedPlaceUseCase : SaveSelectedPlaceUseCase
+) : ViewModel(){
 
     private val _polylineLiveData = MutableLiveData<PolylineOptions>()
     val polylineLiveData: LiveData<PolylineOptions>

@@ -19,7 +19,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ResultMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap

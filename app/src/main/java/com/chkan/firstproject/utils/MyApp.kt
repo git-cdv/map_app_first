@@ -2,10 +2,12 @@ package com.chkan.firstproject.utils
 
 import android.app.Application
 import com.chkan.firstproject.data.local.LocalDataSource
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 
+@HiltAndroidApp
 class MyApp: Application() {
 
     val applicationScopeIO = CoroutineScope(SupervisorJob() + Dispatchers.IO)

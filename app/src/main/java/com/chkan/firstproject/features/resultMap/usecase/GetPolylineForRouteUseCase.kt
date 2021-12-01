@@ -6,8 +6,9 @@ import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.data.network.NetworkDataSource
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.PolyUtil
+import javax.inject.Inject
 
-class GetPolylineForRouteUseCase {
+class GetPolylineForRouteUseCase @Inject constructor() {
     private val networkDataSource = NetworkDataSource()
 
     suspend fun getPolylineForRoute(latLngStart: String, latLngFinish: String): Result <PolylineOptions> {

@@ -13,8 +13,9 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import javax.inject.Inject
 
-class SaveSelectedPlaceUseCase {
+class SaveSelectedPlaceUseCase @Inject constructor() {
 
     private val localDataSource = MyApp.localData
     private val applicationScopeIO = MyApp.instance.applicationScopeIO
