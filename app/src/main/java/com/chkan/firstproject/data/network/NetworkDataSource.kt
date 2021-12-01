@@ -9,8 +9,9 @@ import com.chkan.firstproject.data.network.model.detail.DetailPlaceModel
 import com.chkan.firstproject.data.network.model.geocode.GeocodeModel
 import com.chkan.firstproject.utils.Constans
 import java.lang.Exception
+import javax.inject.Inject
 
-class NetworkDataSource {
+class NetworkDataSource @Inject constructor() {
 
     suspend fun getListForSuggestion(query: String) : Result<ListPlacesModel> {
 

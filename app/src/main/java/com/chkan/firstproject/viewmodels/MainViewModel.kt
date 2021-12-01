@@ -11,6 +11,7 @@ import com.chkan.firstproject.features.from.usecase.SaveSelectedPlaceUseCase
 import com.chkan.firstproject.utils.Constans
 import com.chkan.firstproject.utils.toLatLng
 import com.google.android.gms.maps.model.LatLng
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,14 +19,14 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel : ViewModel(){
-
-    ////change in Hilt
-    private val getListForSuggestionUseCase = GetListForSuggestionUseCase()
-    private val getLatLngSelectedPlaceUseCase = GetLatLngSelectedPlaceUseCase()
-    private val saveSelectedPlaceUseCase = SaveSelectedPlaceUseCase()
-    ////
+@HiltViewModel
+class MainViewModel @Inject constructor(
+            private val getListForSuggestionUseCase : GetListForSuggestionUseCase,
+            private val getLatLngSelectedPlaceUseCase : GetLatLngSelectedPlaceUseCase,
+            private val saveSelectedPlaceUseCase : SaveSelectedPlaceUseCase
+): ViewModel(){
 
     var latLngStart: LatLng = "47.8723852,35.3004297".toLatLng()
     var latLngFinish: LatLng = "50.4501,30.5234".toLatLng()

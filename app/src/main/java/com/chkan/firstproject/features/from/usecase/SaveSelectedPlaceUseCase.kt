@@ -15,11 +15,10 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
-class SaveSelectedPlaceUseCase @Inject constructor() {
+class SaveSelectedPlaceUseCase @Inject constructor(private val networkDataSource : NetworkDataSource) {
 
     private val localDataSource = MyApp.localData
     private val applicationScopeIO = MyApp.instance.applicationScopeIO
-    private val networkDataSource = NetworkDataSource()
 
     fun savePlace(nameOfStart: String, latLngStart: String, nameOfFinish: String, latLngFinish: String) {
         applicationScopeIO.launch {

@@ -9,7 +9,9 @@ import com.chkan.firstproject.features.to.ui.ToBottomFragment
 import com.chkan.firstproject.utils.Constans
 import com.chkan.firstproject.utils.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding

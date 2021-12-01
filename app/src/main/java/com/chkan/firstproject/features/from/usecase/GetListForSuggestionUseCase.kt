@@ -4,10 +4,9 @@ import com.chkan.firstproject.data.cash.CashDataSource
 import com.chkan.firstproject.data.datatype.Result
 import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.data.network.NetworkDataSource
+import javax.inject.Inject
 
-class GetListForSuggestionUseCase {
-
-    private val networkDataSource = NetworkDataSource()
+class GetListForSuggestionUseCase @Inject constructor(private val networkDataSource : NetworkDataSource) {
 
     suspend fun getListForSuggestionUseCase(query: String) : Result <MutableList<String>> {
 

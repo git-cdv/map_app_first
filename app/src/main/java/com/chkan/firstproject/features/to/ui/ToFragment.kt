@@ -37,8 +37,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class ToFragment : Fragment() {
 
     private val viewModel: MainViewModel by activityViewModels()
@@ -121,7 +122,6 @@ class ToFragment : Fragment() {
         snackbar.setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show()
     }
 
-    //создаем маркер при долгом нажатии
     private fun setMapLongClick(map: GoogleMap) {
         map.setOnMapLongClickListener { latLng ->
             addFinish(latLng)
