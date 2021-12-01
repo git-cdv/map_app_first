@@ -11,6 +11,7 @@ import com.chkan.firstproject.features.from.usecase.SaveSelectedPlaceUseCase
 import com.chkan.firstproject.utils.Constans
 import com.chkan.firstproject.utils.toLatLng
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
@@ -80,7 +81,7 @@ class MainViewModel : ViewModel(){
     }
 
     fun getLatLngSelectedPlace(who:Int, name: String?) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val result = getLatLngSelectedPlaceUseCase.getLatLngSelectedPlace(name)
             if(who==Constans.WHO_FROM) nameStart = name.toString() else nameFinish = name.toString()
             updateLatLngSelectedPlaceLiveData(who, result)
@@ -90,9 +91,9 @@ class MainViewModel : ViewModel(){
     fun updateLatLngSelectedPlaceLiveData(who: Int, result: Result<LatLng>) {
         if (result.resultType==ResultType.SUCCESS) {
             if(who==Constans.WHO_FROM){
-                _latLngSelectedPlaceFromLiveData.value = result.data!!
+                _latLngSelectedPlaceFromLiveData.postValue(result.data!!)
             } else {
-                _latLngSelectedPlaceToLiveData.value = result.data!!
+                _latLngSelectedPlaceToLiveData.postValue(result.data!!)
             }
             // TODO: Handle case with NULL
         } else {
