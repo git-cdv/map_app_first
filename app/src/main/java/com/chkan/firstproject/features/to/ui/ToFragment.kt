@@ -93,7 +93,6 @@ class ToFragment : Fragment() {
             mapFragment = SupportMapFragment.newInstance()
             mapFragment!!.getMapAsync { map ->
                 mapObject = map
-                // добавляем маркер по координатам и "фокусируемся" на нем
                 val latLngWork = LatLng(47.84303067630826, 35.13851845689717)
                 latLngWork.toString()
                 val zoomLevel = 15f
@@ -168,9 +167,8 @@ class ToFragment : Fragment() {
                 val cursor =
                     MatrixCursor(arrayOf(BaseColumns._ID, SearchManager.SUGGEST_COLUMN_TEXT_1))
                 query?.let {
-                    //перебор элементов, предоставляя последовательный индекс с элементом
                     suggestions.forEachIndexed { index, value ->
-                        if (value.contains(query, true))//если вводимое значение есть в
+                        if (value.contains(query, true))
                             cursor.addRow(arrayOf(index, value))
                     }
                 }

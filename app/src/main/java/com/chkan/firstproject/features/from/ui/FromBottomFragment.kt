@@ -37,7 +37,6 @@ class FromBottomFragment : BottomSheetDialogFragment() {
 
         listView.setOnItemClickListener{ _, _, position, _ ->
             val item = viewModel.listLocalModelFrom[position]
-                Log.d("MYAPP", "mListView - position: $position, item : $item")
                 viewModel.updateLatLngSelectedPlaceLiveData(Constans.WHO_FROM, Result.success(item.latlng?.toLatLng()))
                 dismiss()
         }

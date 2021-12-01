@@ -27,7 +27,6 @@ class NetworkDataSource @Inject constructor() {
 
         return try {
             val place = Api.retrofitService.getDetailPlace(place_id = place_id,apiKey = Constans.API_KEY_PLACE)
-            Log.d("MYAPP", "NetworkDataSource - place: $place")
             Result.success(place)
         } catch (e: Exception) {
             Result.error(handleNetworkExceptions(e))
@@ -38,7 +37,6 @@ class NetworkDataSource @Inject constructor() {
 
         return try {
             val rout = Api.retrofitService.getDirection(latLngStart,latLngFinish,Constans.API_KEY_DIST)
-            Log.d("MYAPP", "NetworkDataSource - rout: $rout")
             Result.success(rout)
         } catch (e: Exception) {
             Result.error(handleNetworkExceptions(e))
@@ -48,7 +46,6 @@ class NetworkDataSource @Inject constructor() {
     suspend fun getNameFromGeocoding(latLng: String) : Result<GeocodeModel> {
         return try {
             val model = Api.retrofitService.getNameFromGeocode(latlng = latLng,apiKey = Constans.API_KEY_PLACE )
-            Log.d("MYAPP", "NetworkDataSource - getNameFromGeocoding: ${model.results[0].formattedAddress}")
             Result.success(model)
         } catch (e: Exception) {
             Result.error(handleNetworkExceptions(e))
