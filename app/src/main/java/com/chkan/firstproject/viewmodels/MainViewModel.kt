@@ -76,7 +76,6 @@ class MainViewModel : ViewModel(){
     }
 
     private suspend fun getSuggestion(query: String): Result<MutableList<String>> {
-        Log.d("MYAPP", "MainViewModel - getSuggestion: query $query")
         return getListForSuggestionUseCase.getListForSuggestionUseCase(query)
     }
 
@@ -89,13 +88,12 @@ class MainViewModel : ViewModel(){
     }
 
     fun updateLatLngSelectedPlaceLiveData(who: Int, result: Result<LatLng>) {
-        if (result.resultType==ResultType.SUCCESS) {
+        if (result.resultType==ResultType.SUCCESS && result.data != null) {
             if(who==Constans.WHO_FROM){
                 _latLngSelectedPlaceFromLiveData.postValue(result.data!!)
             } else {
                 _latLngSelectedPlaceToLiveData.postValue(result.data!!)
             }
-            // TODO: Handle case with NULL
         } else {
             onResultError()
         }
@@ -104,11 +102,8 @@ class MainViewModel : ViewModel(){
     private fun onResultError() {
         viewModelScope.launch {
             delay(300)
-            // TODO: Handle case with Loading
-            //isLoadingLiveData(false)
         }.invokeOnCompletion {
             _isErrorLiveData.value = true
-            // TODO: Create notification in UI
         }
     }
 

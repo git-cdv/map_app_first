@@ -76,6 +76,10 @@ class ResultMapActivity : AppCompatActivity(), OnMapReadyCallback {
             }
                 })
 
+        viewModel.isErrorLiveData.observe(this, {
+            if(it) showError()
+        })
+
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.mapResult) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -109,6 +113,15 @@ class ResultMapActivity : AppCompatActivity(), OnMapReadyCallback {
             //Если разрешение предоставлено включаем слой местоположения
             map.isMyLocationEnabled = true
         }
+    }
+
+    private fun showError() {
+        val snackbar = Snackbar.make(
+            binding.root,
+            resources.getText(R.string.error_text),
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show()
     }
 
     //слушаем ответ на запрос разрешения

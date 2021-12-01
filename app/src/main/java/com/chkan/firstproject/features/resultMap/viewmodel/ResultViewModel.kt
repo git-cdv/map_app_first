@@ -34,9 +34,8 @@ class ResultViewModel : ViewModel(){
     }
 
     private fun updatePolylineLiveData(result: Result<PolylineOptions>) {
-        if (result.resultType== ResultType.SUCCESS) {
+        if (result.resultType== ResultType.SUCCESS && result.data !=null) {
             _polylineLiveData.value = result.data!!
-            // TODO: Handle case with NULL
         } else {
             onResultError()
         }
@@ -45,11 +44,8 @@ class ResultViewModel : ViewModel(){
     private fun onResultError() {
         viewModelScope.launch {
             delay(300)
-            // TODO: Handle case with Loading
-            //isLoadingLiveData(false)
         }.invokeOnCompletion {
             isErrorMutableLiveData.value = true
-            // TODO: Create notification in UI
         }
     }
 
