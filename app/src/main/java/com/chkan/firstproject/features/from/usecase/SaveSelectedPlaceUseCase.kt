@@ -1,6 +1,5 @@
 package com.chkan.firstproject.features.from.usecase
 
-import android.util.Log
 import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.data.local.LocalModel
 import com.chkan.firstproject.data.network.NetworkDataSource
@@ -62,7 +61,6 @@ class SaveSelectedPlaceUseCase @Inject constructor(private val networkDataSource
             listLocalModel.add(LocalModel(name!!,latlng!!.toStringModel()))
             val modelListOfString = Json.encodeToString(listLocalModel)
             localDataSource.add(nameList,modelListOfString)
-            Log.d("MYAPP", "savePlaceFromSearch - modelListOfModel: $modelListOfString")
         }
     }
 

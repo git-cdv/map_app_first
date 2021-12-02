@@ -1,9 +1,9 @@
 package com.chkan.firstproject.data.network.model.geocode
 
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class GeocodeModel(
-    @SerializedName("results")
     val results: List<Result>
 )

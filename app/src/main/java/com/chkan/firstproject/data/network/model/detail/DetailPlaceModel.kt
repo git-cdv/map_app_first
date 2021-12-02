@@ -1,10 +1,10 @@
 package com.chkan.firstproject.data.network.model.detail
 
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class DetailPlaceModel(
-    @SerializedName("result")
     val result: Result
 
 )

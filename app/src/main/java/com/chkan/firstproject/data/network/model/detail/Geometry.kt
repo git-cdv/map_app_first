@@ -1,9 +1,9 @@
 package com.chkan.firstproject.data.network.model.detail
 
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Geometry(
-    @SerializedName("location")
     val location: Location
 )

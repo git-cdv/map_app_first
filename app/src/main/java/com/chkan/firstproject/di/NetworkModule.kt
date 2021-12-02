@@ -3,12 +3,14 @@ package com.chkan.firstproject.di
 import com.chkan.firstproject.BuildConfig
 import com.chkan.firstproject.data.network.PlaceService
 import com.chkan.firstproject.data.network.RoutService
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -21,7 +23,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(BASE_URL : String) : Retrofit = Retrofit.Builder()
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(Json{ ignoreUnknownKeys = true }.asConverterFactory("application/json".toMediaType()))
         .baseUrl(BASE_URL)
         .build()
 

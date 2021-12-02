@@ -1,11 +1,13 @@
 package com.chkan.firstproject.data.network.model.autocomplete
 
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Prediction(
-    @SerializedName("description")
+    @SerialName("description")
     val name: String,
-    @SerializedName("place_id")
+    @SerialName("place_id")
     val placeId: String
 )

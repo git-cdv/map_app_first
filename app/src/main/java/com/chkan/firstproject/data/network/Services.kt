@@ -1,10 +1,10 @@
 package com.chkan.firstproject.data.network
 
 import com.chkan.firstproject.BuildConfig
-import com.chkan.firstproject.data.network.model.ResponseGson
 import com.chkan.firstproject.data.network.model.autocomplete.ListPlacesModel
 import com.chkan.firstproject.data.network.model.detail.DetailPlaceModel
 import com.chkan.firstproject.data.network.model.geocode.GeocodeModel
+import com.chkan.firstproject.data.network.model.rout.ResponseGson
 import retrofit2.http.GET
 import retrofit2.http.Query
 

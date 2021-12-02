@@ -1,9 +1,10 @@
 package com.chkan.firstproject.data.network.model.geocode
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-import com.google.gson.annotations.SerializedName
-
+@Serializable
 data class Result(
-    @SerializedName("formatted_address")
+    @SerialName("formatted_address")
     val formattedAddress: String
 )

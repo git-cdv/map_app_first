@@ -5,6 +5,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
     id("kotlin-parcelize")
+    id "kotlinx-serialization"
 }
 
 android {
@@ -67,9 +68,12 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
     implementation 'androidx.fragment:fragment-ktx:1.4.0'
 
-    // Retrofit with gson Converter
+    // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.3'
+
+     // Retrofit with kotlinx-serialization
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
 
     //kotlinx-serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
