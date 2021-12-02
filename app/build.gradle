@@ -25,6 +25,15 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            buildConfigField "String", "API_KEY_DIST", "\"AIzaSyAXrI3OF_DmXo-r6V_klQE_3mPEiZ4lIlo\""
+            buildConfigField "String", "API_KEY_PLACE", "\"AIzaSyDqZrvLSzC0NqsqxgxpVXdVgFyV_VhP4a4\""
+            buildConfigField "String", "API_BASE_URL", "\"https://maps.googleapis.com/\""
+            buildConfigField "String", "API_ADD_URL_ROUT", "\"maps/api/directions/json\""
+            buildConfigField "String", "API_ADD_URL_AUTOCOMPLETE", "\"maps/api/place/autocomplete/json\""
+            buildConfigField "String", "API_ADD_URL_DETAIL", "\"maps/api/place/details/json\""
+            buildConfigField "String", "API_ADD_URL_GEOCODE", "\"maps/api/geocode/json\""
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

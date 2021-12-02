@@ -2,7 +2,6 @@ package com.chkan.firstproject.features.to.ui
 
 import android.annotation.SuppressLint
 import android.app.SearchManager
-import android.content.Intent
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.graphics.Color
@@ -26,10 +25,6 @@ import com.chkan.firstproject.databinding.FragmentToBinding
 import com.chkan.firstproject.features.MainFragmentDirections
 import com.chkan.firstproject.features.result_map.model.ResultModel
 import com.chkan.firstproject.utils.Constans
-import com.chkan.firstproject.utils.Constans.LATLNG_FINISH
-import com.chkan.firstproject.utils.Constans.LATLNG_START
-import com.chkan.firstproject.utils.Constans.NAME_FINISH
-import com.chkan.firstproject.utils.Constans.NAME_START
 import com.chkan.firstproject.utils.hideKeyboard
 import com.chkan.firstproject.utils.toStringModel
 import com.chkan.firstproject.viewmodels.MainViewModel
