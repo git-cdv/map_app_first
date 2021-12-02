@@ -6,7 +6,7 @@ import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.data.network.NetworkDataSource
 import javax.inject.Inject
 
-class GetListForSuggestionUseCase @Inject constructor(private val networkDataSource : NetworkDataSource) {
+class GetListForSuggestionUseCase @Inject constructor(private val networkDataSource : NetworkDataSource, private val cashDataSource : CashDataSource) {
 
     suspend fun getListForSuggestionUseCase(query: String) : Result <MutableList<String>> {
 
@@ -16,7 +16,7 @@ class GetListForSuggestionUseCase @Inject constructor(private val networkDataSou
             val listPlaces = listAsModel.data?.listPlaces
             val set = mutableSetOf<String>()
             if (listPlaces != null) {
-                CashDataSource.places = listPlaces
+                cashDataSource.places = listPlaces
                 for (item in listPlaces) {
                     set.add(item.name)
                 }

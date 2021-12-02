@@ -1,4 +1,4 @@
-package com.chkan.firstproject.features.resultMap.viewmodel
+package com.chkan.firstproject.features.result_map.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.chkan.firstproject.data.datatype.Result
 import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.features.from.usecase.SaveSelectedPlaceUseCase
-import com.chkan.firstproject.features.resultMap.usecase.GetPolylineForRouteUseCase
+import com.chkan.firstproject.features.result_map.usecase.GetPolylineForRouteUseCase
 import com.google.android.gms.maps.model.PolylineOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay

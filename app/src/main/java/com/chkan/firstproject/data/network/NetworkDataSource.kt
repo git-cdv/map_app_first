@@ -1,6 +1,5 @@
 package com.chkan.firstproject.data.network
 
-import android.util.Log
 import com.chkan.firstproject.data.datatype.Result
 import com.chkan.firstproject.data.network.exceptions.handleNetworkExceptions
 import com.chkan.firstproject.data.network.model.ResponseGson
@@ -24,7 +23,6 @@ class NetworkDataSource @Inject constructor() {
     }
 
     suspend fun getDetailPlace(place_id: String) : Result<DetailPlaceModel> {
-
         return try {
             val place = Api.retrofitService.getDetailPlace(place_id = place_id,apiKey = Constans.API_KEY_PLACE)
             Result.success(place)

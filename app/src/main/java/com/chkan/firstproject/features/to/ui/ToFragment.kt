@@ -22,7 +22,7 @@ import com.chkan.firstproject.MainActivity
 import com.chkan.firstproject.R
 import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.databinding.FragmentToBinding
-import com.chkan.firstproject.features.resultMap.ui.ResultMapActivity
+import com.chkan.firstproject.features.result_map.ui.ResultMapActivity
 import com.chkan.firstproject.utils.Constans
 import com.chkan.firstproject.utils.Constans.LATLNG_FINISH
 import com.chkan.firstproject.utils.Constans.LATLNG_START

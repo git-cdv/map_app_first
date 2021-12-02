@@ -22,6 +22,6 @@ android:id="@+id/mapResult"
 android:name="com.google.android.gms.maps.SupportMapFragment"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context=".features.resultMap.ui.ResultMapActivity" />
+tools:context=".features.result_map.ui.ResultMapActivity" />
 
 </LinearLayout>

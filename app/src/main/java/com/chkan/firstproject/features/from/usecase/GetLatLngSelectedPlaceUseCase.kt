@@ -7,10 +7,10 @@ import com.chkan.firstproject.data.network.NetworkDataSource
 import com.google.android.gms.maps.model.LatLng
 import javax.inject.Inject
 
-class GetLatLngSelectedPlaceUseCase @Inject constructor(private val networkDataSource : NetworkDataSource) {
+class GetLatLngSelectedPlaceUseCase @Inject constructor(private val networkDataSource : NetworkDataSource, private val cashDataSource : CashDataSource ) {
 
     suspend fun getLatLngSelectedPlace(name: String?): Result<LatLng> {
-        val idSelected = CashDataSource.places.find { it.name == name }?.placeId
+        val idSelected = cashDataSource.places.find { it.name == name }?.placeId
         val placeModel = idSelected?.let { networkDataSource.getDetailPlace(it) }
             return if (placeModel?.resultType == ResultType.SUCCESS && placeModel.data !=null) {
                     val lat = placeModel.data.result.geometry.location.lat

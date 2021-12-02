@@ -1,4 +1,4 @@
-package com.chkan.firstproject.features.resultMap.ui
+package com.chkan.firstproject.features.result_map.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -9,7 +9,7 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import com.chkan.firstproject.R
 import com.chkan.firstproject.databinding.ActivityResultMapBinding
-import com.chkan.firstproject.features.resultMap.viewmodel.ResultViewModel
+import com.chkan.firstproject.features.result_map.viewmodel.ResultViewModel
 import com.chkan.firstproject.utils.Constans
 import com.chkan.firstproject.utils.toLatLng
 import com.google.android.gms.maps.CameraUpdateFactory

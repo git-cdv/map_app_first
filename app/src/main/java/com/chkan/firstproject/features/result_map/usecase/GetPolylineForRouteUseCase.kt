@@ -1,4 +1,4 @@
-package com.chkan.firstproject.features.resultMap.usecase
+package com.chkan.firstproject.features.result_map.usecase
 
 import android.graphics.Color
 import com.chkan.firstproject.data.datatype.Result

@@ -3,6 +3,8 @@ package com.chkan.firstproject
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.chkan.firstproject.databinding.ActivityMainBinding
 import com.chkan.firstproject.features.from.ui.FromBottomFragment
 import com.chkan.firstproject.features.to.ui.ToBottomFragment
@@ -16,6 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
     private var back_pressed: Long = 0
+    private var navController: NavController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +26,12 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val viewPager = binding.viewPager
+        val host: NavHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment? ?: return
+
+        navController = host.navController
+
+    /*    val viewPager = binding.viewPager
         val tabLayout = binding.tabLayout
         viewPager.isUserInputEnabled = false
         val adapter = ViewPagerAdapter(supportFragmentManager, lifecycle)
@@ -32,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             if (position==0){tab.text = "Откуда"}
             else {tab.text = "Куда"}
-        }.attach()
+        }.attach()*/
     }
 
     fun getBottomSheet(who:Int) {
