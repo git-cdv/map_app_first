@@ -18,11 +18,13 @@ import androidx.appcompat.widget.SearchView
 import androidx.cursoradapter.widget.CursorAdapter
 import androidx.cursoradapter.widget.SimpleCursorAdapter
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.chkan.firstproject.MainActivity
 import com.chkan.firstproject.R
 import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.databinding.FragmentToBinding
-import com.chkan.firstproject.features.result_map.ui.ResultMapActivity
+import com.chkan.firstproject.features.MainFragmentDirections
+import com.chkan.firstproject.features.result_map.model.ResultModel
 import com.chkan.firstproject.utils.Constans
 import com.chkan.firstproject.utils.Constans.LATLNG_FINISH
 import com.chkan.firstproject.utils.Constans.LATLNG_START
@@ -65,16 +67,13 @@ class ToFragment : Fragment() {
         }
 
         binding.btnTo.setOnClickListener {
+            val result =  ResultModel(
+                startName = viewModel.nameStart,
+                startLatNng = viewModel.latLngStart.toStringModel(),
+                finishName = viewModel.nameFinish,
+                finishLatNng = viewModel.latLngFinish.toStringModel())
 
-            val intent = Intent(context, ResultMapActivity::class.java).apply {
-                putExtra(LATLNG_START, viewModel.latLngStart.toStringModel())
-                putExtra(LATLNG_FINISH, viewModel.latLngFinish.toStringModel())
-                Log.d("MYAPP", "btnTo - nameStart: ${viewModel.nameStart}")
-                Log.d("MYAPP", "btnTo - nameFinish: ${viewModel.nameFinish}")
-                putExtra(NAME_START, viewModel.nameStart)
-                putExtra(NAME_FINISH, viewModel.nameFinish)
-            }
-            startActivity(intent)
+            findNavController().navigate(MainFragmentDirections.actionMainFragmentToResultFragment(result))
         }
 
         viewModel.searchSuggestion.observe(viewLifecycleOwner, {

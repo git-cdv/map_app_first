@@ -11,10 +11,12 @@ import com.chkan.firstproject.databinding.FragmentMainBinding
 import com.chkan.firstproject.features.from.ui.FromFragment
 import com.chkan.firstproject.features.to.ui.ToFragment
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
 private var _binding: FragmentMainBinding? = null
 private val binding get() = _binding!!
 
+@AndroidEntryPoint
 class MainFragment : Fragment() {
 
     override fun onCreateView(

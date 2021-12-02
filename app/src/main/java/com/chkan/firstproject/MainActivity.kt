@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (back_pressed + 2000 > System.currentTimeMillis()) super.onBackPressed() else Toast.makeText(
-            baseContext, "Для выхода нажмите \"назад\" еще раз",
+            baseContext, resources.getString(R.string.text_back),
             Toast.LENGTH_SHORT
         ).show()
         back_pressed = System.currentTimeMillis()

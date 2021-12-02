@@ -5,8 +5,10 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.chkan.firstproject.R
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 
+@AndroidEntryPoint
 class SplashFragment : Fragment() {
 
     private val scope = CoroutineScope(Dispatchers.Default)

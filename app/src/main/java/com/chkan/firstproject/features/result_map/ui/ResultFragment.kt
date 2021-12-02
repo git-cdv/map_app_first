@@ -3,12 +3,18 @@ package com.chkan.firstproject.features.result_map.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.viewModels
+import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.chkan.firstproject.R
-import com.chkan.firstproject.databinding.ActivityResultMapBinding
+import com.chkan.firstproject.databinding.FragmentMainBinding
+import com.chkan.firstproject.databinding.FragmentResultBinding
 import com.chkan.firstproject.features.result_map.viewmodel.ResultViewModel
 import com.chkan.firstproject.utils.Constans
 import com.chkan.firstproject.utils.toLatLng
@@ -16,28 +22,35 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ResultMapActivity : AppCompatActivity(), OnMapReadyCallback {
+class ResultFragment : Fragment() {
 
+    private var mapFragment: SupportMapFragment? = null
     private lateinit var map: GoogleMap
-    private lateinit var binding: ActivityResultMapBinding
     private val viewModel: ResultViewModel by viewModels()
 
+    private var _binding: FragmentResultBinding? = null
+    private val binding get() = _binding!!
 
     private val REQUEST_LOCATION_PERMISSION = 1
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentResultBinding.inflate(inflater, container, false)
 
-        binding = ActivityResultMapBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        val resultModel = ResultFragmentArgs.fromBundle(requireArguments()).resultModel
 
-        val latLngStart = intent.getStringExtra(Constans.LATLNG_START)
+        Log.d("MYAPP", "ResultFragment - resultModel: $resultModel")
+
+        /*val latLngStart = intent.getStringExtra(Constans.LATLNG_START)
         val latLngFinish = intent.getStringExtra(Constans.LATLNG_FINISH)
         val nameStart = intent.getStringExtra(Constans.NAME_START)
         val nameFinish = intent.getStringExtra(Constans.NAME_FINISH)
@@ -76,27 +89,37 @@ class ResultMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 )
                 snackbar.setBackgroundTint(Color.BLACK).setTextColor(Color.WHITE).show()
             }
-                })
+        })
 
         viewModel.isErrorLiveData.observe(this, {
             if(it) showError()
         })
+*/
 
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.mapResult) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+            mapFragment = SupportMapFragment.newInstance()
+            mapFragment?.getMapAsync(OnMapReadyCallback { googleMap ->
+                map = googleMap
+                //enableMyLocation()
+                val latLng = LatLng(1.289545, 103.849972)
+                googleMap.addMarker(
+                    MarkerOptions().position(latLng)
+                        .title("Singapore")
+                )
+                googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+            })
 
-        val toolbar : MaterialToolbar = findViewById(R.id.result_toolbar)
-        toolbar.setNavigationOnClickListener {finish()}
+        childFragmentManager.beginTransaction().replace(R.id.mapResult, mapFragment!!).commit()
 
+        val toolbar : MaterialToolbar = binding.resultToolbar
+        toolbar.setNavigationOnClickListener {findNavController().navigateUp()}
+
+        return binding.root
     }
 
-    override fun onMapReady(googleMap: GoogleMap) { //коллбек после загрузки карты
-        map = googleMap
-        enableMyLocation()
-    }
 
-    private fun enableMyLocation() {
+
+
+    /*private fun enableMyLocation() {
         if (ActivityCompat.checkSelfPermission(//Если разрешение нет - запрашиваем
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -107,7 +130,7 @@ class ResultMapActivity : AppCompatActivity(), OnMapReadyCallback {
         ) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
                 REQUEST_LOCATION_PERMISSION
             )
             return
@@ -115,15 +138,6 @@ class ResultMapActivity : AppCompatActivity(), OnMapReadyCallback {
             //Если разрешение предоставлено включаем слой местоположения
             map.isMyLocationEnabled = true
         }
-    }
-
-    private fun showError() {
-        val snackbar = Snackbar.make(
-            binding.root,
-            resources.getText(R.string.error_text),
-            Snackbar.LENGTH_LONG
-        )
-        snackbar.setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show()
     }
 
     //слушаем ответ на запрос разрешения
@@ -139,6 +153,19 @@ class ResultMapActivity : AppCompatActivity(), OnMapReadyCallback {
         }else {
             //здесь что-то делаем если не дает разрешение
         }
+    }*/
+
+    private fun showError() {
+        val snackbar = Snackbar.make(
+            binding.root,
+            resources.getText(R.string.error_text),
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.setBackgroundTint(Color.RED).setTextColor(Color.WHITE).show()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

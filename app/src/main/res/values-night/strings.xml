@@ -8,4 +8,5 @@
     <string name="text_history">История</string>
     <string name="text_from">Откуда</string>
     <string name="text_to">Куда</string>
+    <string name="text_back">\"Для выхода нажмите \"назад\" еще раз\"</string>
 </resources>
