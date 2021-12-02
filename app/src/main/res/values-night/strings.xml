@@ -6,4 +6,6 @@
     <string name="search">Поиск локации</string>
     <string name="our_rout">Ваш маршрут</string>
     <string name="text_history">История</string>
+    <string name="text_from">Откуда</string>
+    <string name="text_to">Куда</string>
 </resources>
