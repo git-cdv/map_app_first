@@ -9,9 +9,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.chkan.firstproject.MainActivity
 import com.chkan.firstproject.R
 import com.chkan.firstproject.databinding.FragmentMainBinding
 import com.chkan.firstproject.databinding.FragmentResultBinding
@@ -49,30 +52,18 @@ class ResultFragment : Fragment() {
         val resultModel = ResultFragmentArgs.fromBundle(requireArguments()).resultModel
 
         Log.d("MYAPP", "ResultFragment - resultModel: $resultModel")
-
-        /*val latLngStart = intent.getStringExtra(Constans.LATLNG_START)
-        val latLngFinish = intent.getStringExtra(Constans.LATLNG_FINISH)
-        val nameStart = intent.getStringExtra(Constans.NAME_START)
-        val nameFinish = intent.getStringExtra(Constans.NAME_FINISH)
-
-        if (latLngStart!=null&&latLngFinish!=null){
-            viewModel.getRout(latLngStart,latLngFinish)
-            if (nameStart!=null&&nameFinish!=null) {
-                viewModel.saveLatLng(nameStart,latLngStart,nameFinish,latLngFinish)
-            }
-        }
+        viewModel.getRout(resultModel.startLatNng,resultModel.finishLatNng)
+        viewModel.saveLatLng(resultModel)
 
         viewModel.polylineLiveData.observe(this, {
 
-            if (latLngStart!=null&&latLngFinish!=null) {
-
-                val start = latLngStart.toLatLng()
+                val start = resultModel.startLatNng.toLatLng()
 
                 val markerFrom = MarkerOptions()
                     .position(start)
                     .title("Start")
                 val markerTo = MarkerOptions()
-                    .position(latLngFinish.toLatLng())
+                    .position(resultModel.finishLatNng.toLatLng())
                     .title("Finish")
 
                 map.addMarker(markerFrom)
@@ -88,25 +79,18 @@ class ResultFragment : Fragment() {
                     Snackbar.LENGTH_LONG
                 )
                 snackbar.setBackgroundTint(Color.BLACK).setTextColor(Color.WHITE).show()
-            }
+
         })
 
         viewModel.isErrorLiveData.observe(this, {
             if(it) showError()
         })
-*/
 
             mapFragment = SupportMapFragment.newInstance()
-            mapFragment?.getMapAsync(OnMapReadyCallback { googleMap ->
+            mapFragment?.getMapAsync { googleMap ->
                 map = googleMap
-                //enableMyLocation()
-                val latLng = LatLng(1.289545, 103.849972)
-                googleMap.addMarker(
-                    MarkerOptions().position(latLng)
-                        .title("Singapore")
-                )
-                googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
-            })
+                enableMyLocation()
+            }
 
         childFragmentManager.beginTransaction().replace(R.id.mapResult, mapFragment!!).commit()
 
@@ -117,19 +101,16 @@ class ResultFragment : Fragment() {
     }
 
 
-
-
-    /*private fun enableMyLocation() {
-        if (ActivityCompat.checkSelfPermission(//Если разрешение нет - запрашиваем
-                this,
+    private fun enableMyLocation() {
+        if (ContextCompat.checkSelfPermission(//Если разрешение нет - запрашиваем
+                requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
+            ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                requireContext(),
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(
-                this,
+            requestPermissions(
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
                 REQUEST_LOCATION_PERMISSION
             )
@@ -153,7 +134,7 @@ class ResultFragment : Fragment() {
         }else {
             //здесь что-то делаем если не дает разрешение
         }
-    }*/
+    }
 
     private fun showError() {
         val snackbar = Snackbar.make(

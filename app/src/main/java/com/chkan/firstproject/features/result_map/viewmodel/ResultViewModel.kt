@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.chkan.firstproject.data.datatype.Result
 import com.chkan.firstproject.data.datatype.ResultType
 import com.chkan.firstproject.features.from.usecase.SaveSelectedPlaceUseCase
+import com.chkan.firstproject.features.result_map.model.ResultModel
 import com.chkan.firstproject.features.result_map.usecase.GetPolylineForRouteUseCase
 import com.google.android.gms.maps.model.PolylineOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -51,8 +52,8 @@ class ResultViewModel @Inject constructor(
         }
     }
 
-    fun saveLatLng(nameStart: String, latLngStart: String, nameFinish: String, latLngFinish: String) {
-        saveSelectedPlaceUseCase.savePlace(nameStart,latLngStart,nameFinish,latLngFinish)
+    fun saveLatLng(resultModel : ResultModel) {
+        saveSelectedPlaceUseCase.savePlace(resultModel)
     }
 
 }
