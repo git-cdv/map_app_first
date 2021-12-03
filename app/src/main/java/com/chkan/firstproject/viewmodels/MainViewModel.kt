@@ -1,15 +1,14 @@
 package com.chkan.firstproject.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.*
-import com.chkan.firstproject.data.datatype.Result
-import com.chkan.firstproject.data.datatype.ResultType
-import com.chkan.firstproject.data.local.LocalModel
-import com.chkan.firstproject.features.from.usecase.GetLatLngSelectedPlaceUseCase
-import com.chkan.firstproject.features.from.usecase.GetListForSuggestionUseCase
-import com.chkan.firstproject.features.from.usecase.SaveSelectedPlaceUseCase
-import com.chkan.firstproject.utils.Constans
-import com.chkan.firstproject.utils.toLatLng
+import com.chkan.base.utils.ResultType
+import com.chkan.base.utils.Result
+import com.chkan.base.utils.Constans
+import com.chkan.base.utils.toLatLng
+import com.chkan.domain.models.LocalModelUI
+import com.chkan.domain.usecases.directions.GetLatLngSelectedPlaceUseCase
+import com.chkan.domain.usecases.directions.GetListForSuggestionUseCase
+import com.chkan.domain.usecases.result_map.SaveSelectedPlaceUseCase
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,9 +22,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-            private val getListForSuggestionUseCase : GetListForSuggestionUseCase,
-            private val getLatLngSelectedPlaceUseCase : GetLatLngSelectedPlaceUseCase,
-            private val saveSelectedPlaceUseCase : SaveSelectedPlaceUseCase
+    private val getListForSuggestionUseCase : GetListForSuggestionUseCase,
+    private val getLatLngSelectedPlaceUseCase : GetLatLngSelectedPlaceUseCase,
+    private val saveSelectedPlaceUseCase : SaveSelectedPlaceUseCase
 ): ViewModel(){
 
     var latLngStart: LatLng = "47.8723852,35.3004297".toLatLng()
@@ -33,8 +32,8 @@ class MainViewModel @Inject constructor(
     var nameStart: String = ""
     var nameFinish: String = ""
 
-    var listLocalModelFrom = arrayListOf<LocalModel>()
-    var listLocalModelTo = arrayListOf<LocalModel>()
+    var listLocalModelFrom = listOf<LocalModelUI>()
+    var listLocalModelTo = listOf<LocalModelUI>()
 
     private val queryFlow = MutableStateFlow("")
 
@@ -83,14 +82,14 @@ class MainViewModel @Inject constructor(
     fun getLatLngSelectedPlace(who:Int, name: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             val result = getLatLngSelectedPlaceUseCase.getLatLngSelectedPlace(name)
-            if(who==Constans.WHO_FROM) nameStart = name.toString() else nameFinish = name.toString()
+            if(who== Constans.WHO_FROM) nameStart = name.toString() else nameFinish = name.toString()
             updateLatLngSelectedPlaceLiveData(who, result)
         }
     }
 
     fun updateLatLngSelectedPlaceLiveData(who: Int, result: Result<LatLng>) {
         if (result.resultType==ResultType.SUCCESS && result.data != null) {
-            if(who==Constans.WHO_FROM){
+            if(who== Constans.WHO_FROM){
                 _latLngSelectedPlaceFromLiveData.postValue(result.data!!)
             } else {
                 _latLngSelectedPlaceToLiveData.postValue(result.data!!)
@@ -109,15 +108,15 @@ class MainViewModel @Inject constructor(
     }
 
     fun getListHistory(who: Int): Array<String> {
-        if(who==Constans.WHO_FROM) {
+        if(who== Constans.WHO_FROM) {
             listLocalModelFrom = saveSelectedPlaceUseCase.getFromHistory(who)
-            listLocalModelFrom.reverse()
+            listLocalModelFrom.reversed()
             return listLocalModelFrom.map {
                 it.name
             }.toTypedArray()
         } else {
             listLocalModelTo = saveSelectedPlaceUseCase.getFromHistory(who)
-            listLocalModelTo.reverse()
+            listLocalModelTo.reversed()
             return listLocalModelTo.map {
                 it.name
             }.toTypedArray()

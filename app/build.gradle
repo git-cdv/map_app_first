@@ -5,7 +5,6 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
     id("kotlin-parcelize")
-    id "kotlinx-serialization"
 }
 
 android {
@@ -25,15 +24,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            buildConfigField "String", "API_KEY_DIST", "\"AIzaSyAXrI3OF_DmXo-r6V_klQE_3mPEiZ4lIlo\""
-            buildConfigField "String", "API_KEY_PLACE", "\"AIzaSyDqZrvLSzC0NqsqxgxpVXdVgFyV_VhP4a4\""
-            buildConfigField "String", "API_BASE_URL", "\"https://maps.googleapis.com/\""
-            buildConfigField "String", "API_ADD_URL_ROUT", "\"maps/api/directions/json\""
-            buildConfigField "String", "API_ADD_URL_AUTOCOMPLETE", "\"maps/api/place/autocomplete/json\""
-            buildConfigField "String", "API_ADD_URL_DETAIL", "\"maps/api/place/details/json\""
-            buildConfigField "String", "API_ADD_URL_GEOCODE", "\"maps/api/geocode/json\""
         }
     }
     compileOptions {
@@ -55,6 +45,10 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
 
+    //modules
+    implementation project(path: ':domain')
+    implementation project(path: ':base')
+
     //navigation
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.5"
     implementation "androidx.navigation:navigation-ui-ktx:2.3.5"
@@ -67,16 +61,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
     implementation 'androidx.fragment:fragment-ktx:1.4.0'
-
-    // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.3'
-
-     // Retrofit with kotlinx-serialization
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
-
-    //kotlinx-serialization
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2"
 
     //viewpager
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
@@ -97,4 +81,3 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
 
-apply plugin: 'kotlinx-serialization'

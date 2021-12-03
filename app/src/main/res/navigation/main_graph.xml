@@ -5,7 +5,7 @@
     app:startDestination="@id/splashFragment">
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.chkan.firstproject.features.SplashFragment"
+        android:name="com.chkan.firstproject.ui.SplashFragment"
         android:label="SplashFragment" >
         <action
             android:id="@+id/action_splashFragment_to_mainFragment"
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.chkan.firstproject.features.MainFragment"
+        android:name="com.chkan.firstproject.ui.MainFragment"
         android:label="MainFragment" >
         <action
             android:id="@+id/action_mainFragment_to_resultFragment"
@@ -25,10 +25,10 @@
     </fragment>
     <fragment
         android:id="@+id/resultFragment"
-        android:name="com.chkan.firstproject.features.result_map.ui.ResultFragment"
+        android:name="com.chkan.firstproject.ui.result_map.ResultFragment"
         android:label="ResultFragment" >
         <argument
             android:name="result_model"
-            app:argType="com.chkan.firstproject.features.result_map.model.ResultModel" />
+            app:argType="com.chkan.domain.models.ResultModel" />
     </fragment>
 </navigation>

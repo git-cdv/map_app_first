@@ -6,9 +6,8 @@ import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.chkan.firstproject.databinding.ActivityMainBinding
-import com.chkan.firstproject.features.from.ui.FromBottomFragment
-import com.chkan.firstproject.features.to.ui.ToBottomFragment
-import com.chkan.firstproject.utils.Constans
+import com.chkan.firstproject.ui.directions.FromBottomFragment
+import com.chkan.firstproject.ui.directions.ToBottomFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,13 +30,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getBottomSheet(who:Int) {
-        if (who == Constans.WHO_FROM) {
+        if (who == com.chkan.base.utils.Constans.WHO_FROM) {
             FromBottomFragment().apply {
-                show(supportFragmentManager, Constans.TAG_SHEET_FROM)
+                show(supportFragmentManager, com.chkan.base.utils.Constans.TAG_SHEET_FROM)
             }
         } else {
             ToBottomFragment().apply {
-                show(supportFragmentManager, Constans.TAG_SHEET_TO)
+                show(supportFragmentManager, com.chkan.base.utils.Constans.TAG_SHEET_TO)
             }
         }
     }
