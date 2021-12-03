@@ -81,6 +81,4 @@ class SaveSelectedPlaceUseCase @Inject constructor(private val networkDataSource
             arrayListOf(LocalModel("Пока нет сохранений",null))
         }
     }
-
-
 }

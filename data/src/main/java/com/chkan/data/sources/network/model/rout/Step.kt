@@ -23,5 +23,3 @@ data class Step(
     @SerialName("travel_mode")
     val travelMode: String
 )
-
-//TODO: костыль - val maneuver: String? = null

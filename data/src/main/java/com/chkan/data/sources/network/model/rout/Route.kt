@@ -16,10 +16,4 @@ data class Route(
     val overviewPolyline: OverviewPolyline,
     @SerialName("summary")
     val summary: String
-  /*  @SerialName("warnings")
-    val warnings: List<Any>,
-    @SerialName("waypoint_order")
-    val waypointOrder: List<Any>*/
 )
-
-//TODO: костыль - Any

@@ -23,7 +23,10 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(BASE_URL : String) : Retrofit = Retrofit.Builder()
-        .addConverterFactory(Json{ ignoreUnknownKeys = true }.asConverterFactory("application/json".toMediaType()))
+        .addConverterFactory(Json{
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.asConverterFactory("application/json".toMediaType()))
         .baseUrl(BASE_URL)
         .build()
 

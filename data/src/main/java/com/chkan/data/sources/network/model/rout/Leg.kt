@@ -20,10 +20,4 @@ data class Leg(
     val startLocation: StartLocation,
     @SerialName("steps")
     val steps: List<Step>
-    /*@SerialName("traffic_speed_entry")
-    val trafficSpeedEntry: List<Any>,
-    @SerialName("via_waypoint")
-    val viaWaypoint: List<Any>*/
 )
-
-//TODO: костыль - Any

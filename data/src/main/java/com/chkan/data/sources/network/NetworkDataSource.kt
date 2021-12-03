@@ -24,7 +24,7 @@ class NetworkDataSource @Inject constructor(private val routApi: RoutService, pr
         }
     }
 
-    suspend fun getDetailPlace(place_id: String) : com.chkan.base.utils.Result<DetailPlaceModel> {
+    suspend fun getDetailPlace(place_id: String) : Result<DetailPlaceModel> {
         return try {
             val place = placeApi.getDetailPlace(place_id = place_id,apiKey = BuildConfig.API_KEY_PLACE)
             Log.d("MYAPP", "NetworkDataSource - getDetailPlace OK: ${place.result.geometry}")
@@ -35,7 +35,7 @@ class NetworkDataSource @Inject constructor(private val routApi: RoutService, pr
         }
     }
 
-    suspend fun getDirection(latLngStart: String, latLngFinish: String) : com.chkan.base.utils.Result<ResponseGson> {
+    suspend fun getDirection(latLngStart: String, latLngFinish: String) : Result<ResponseGson> {
         return try {
             val rout = routApi.getDirection(latLngStart,latLngFinish,BuildConfig.API_KEY_DIST)
             Log.d("MYAPP", "NetworkDataSource - getDirection OK: ${rout.status}")
@@ -46,7 +46,7 @@ class NetworkDataSource @Inject constructor(private val routApi: RoutService, pr
         }
     }
 
-    suspend fun getNameFromGeocoding(latLng: String) : com.chkan.base.utils.Result<GeocodeModel> {
+    suspend fun getNameFromGeocoding(latLng: String) : Result<GeocodeModel> {
         return try {
             val model = placeApi.getNameFromGeocode(latlng = latLng,apiKey = BuildConfig.API_KEY_PLACE )
             Log.d("MYAPP", "NetworkDataSource - getNameFromGeocoding OK: ${model.results}")
