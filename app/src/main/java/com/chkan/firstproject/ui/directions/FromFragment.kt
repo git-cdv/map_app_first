@@ -105,7 +105,8 @@ class FromFragment : Fragment() {
 
     private fun initSearchView(searchView: SearchView) {
 
-        searchView.findViewById<AutoCompleteTextView>(R.id.search_src_text).threshold = 3
+        searchView.findViewById<AutoCompleteTextView>(R.id.search_src_text).threshold = 2
+        searchView.setIconifiedByDefault(false)//true - фокус при нажатии на значок, false - на виджет
 
         val from = arrayOf(SearchManager.SUGGEST_COLUMN_TEXT_1)
         val to = intArrayOf(R.id.item_label)
