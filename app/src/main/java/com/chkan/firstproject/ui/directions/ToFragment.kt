@@ -96,7 +96,7 @@ class ToFragment : Fragment() {
 
         viewModel.latLngSelectedPlaceToLiveData.observe(viewLifecycleOwner, {
                 addFinish(it)
-                mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15F))
+                mapObject?.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15F))
         })
 
         childFragmentManager.beginTransaction().replace(R.id.mapTo, mapFragment!!).commit()
@@ -121,8 +121,8 @@ class ToFragment : Fragment() {
 
     private fun addFinish(latLng: LatLng) {
         viewModel.checkFinish(latLng)
-        mapObject.clear()
-        mapObject.addMarker(
+        mapObject?.clear()
+        mapObject?.addMarker(
             MarkerOptions()
                 .position(latLng)
                 .title(getString(R.string.dropped_finish))

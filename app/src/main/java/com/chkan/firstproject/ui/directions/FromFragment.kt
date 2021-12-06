@@ -66,7 +66,7 @@ class FromFragment : Fragment() {
 
         viewModel.latLngSelectedPlaceFromLiveData.observe(viewLifecycleOwner, {
                 addStart(it)
-                mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15F))
+                mapObject?.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15F))
         })
 
         viewModel.isErrorLiveData.observe(viewLifecycleOwner, {
@@ -160,8 +160,8 @@ class FromFragment : Fragment() {
 
     private fun addStart(latLng: LatLng) {
         viewModel.checkStart(latLng)
-        mapObject.clear()
-        mapObject.addMarker(
+        mapObject?.clear()
+        mapObject?.addMarker(
             MarkerOptions()
                 .position(latLng)
                 .title(getString(R.string.dropped_start))
