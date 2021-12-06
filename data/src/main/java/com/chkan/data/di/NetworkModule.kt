@@ -1,5 +1,6 @@
 package com.chkan.data.di
 
+import android.util.Log
 import com.chkan.data.BuildConfig
 import com.chkan.data.sources.network.PlaceService
 import com.chkan.data.sources.network.RoutService
@@ -9,7 +10,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
+import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
@@ -17,25 +21,44 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    private val json by lazy {
+        Json {
+            ignoreUnknownKeys = true
+            isLenient = true
+        }
+    }
+
     @Provides
-    fun providesBaseUrl() : String = BuildConfig.API_BASE_URL
+    internal fun providesBaseUrl() : String = BuildConfig.API_BASE_URL
 
     @Provides
     @Singleton
-    fun provideRetrofit(BASE_URL : String) : Retrofit = Retrofit.Builder()
-        .addConverterFactory(Json{
-            isLenient = true
-            ignoreUnknownKeys = true
-        }.asConverterFactory("application/json".toMediaType()))
+    internal fun provideRetrofit(BASE_URL : String, okHttpClient: OkHttpClient) : Retrofit = Retrofit.Builder()
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(BASE_URL)
+        .client(okHttpClient)
         .build()
 
     @Provides
     @Singleton
-    fun provideRoutService(retrofit : Retrofit) : RoutService = retrofit.create(RoutService::class.java)
+    internal fun provideRoutService(retrofit : Retrofit) : RoutService = retrofit.create(RoutService::class.java)
 
     @Provides
     @Singleton
-    fun providePlaceService(retrofit : Retrofit) : PlaceService = retrofit.create(PlaceService::class.java)
+    internal fun providePlaceService(retrofit : Retrofit) : PlaceService = retrofit.create(PlaceService::class.java)
+
+    @Provides
+    internal fun loggingInterceptor(): HttpLoggingInterceptor  {
+        return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    }
+
+    @Provides
+    internal fun okHttpClient(
+        logging: HttpLoggingInterceptor
+    ): OkHttpClient {
+        val builder = OkHttpClient.Builder()
+            .addInterceptor(logging)
+        return builder.build()
+    }
 
 }
