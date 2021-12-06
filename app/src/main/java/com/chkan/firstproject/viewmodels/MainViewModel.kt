@@ -32,9 +32,6 @@ class MainViewModel @Inject constructor(
     var nameStart: String = ""
     var nameFinish: String = ""
 
-    var listLocalModelFrom = listOf<LocalModelUI>()
-    var listLocalModelTo = listOf<LocalModelUI>()
-
     private val queryFlow = MutableStateFlow("")
 
     init {
@@ -107,20 +104,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getListHistory(who: Int): Array<String> {
-        if(who== Constans.WHO_FROM) {
-            listLocalModelFrom = saveSelectedPlaceUseCase.getFromHistory(who)
-            listLocalModelFrom.reversed()
-            return listLocalModelFrom.map {
-                it.name
-            }.toTypedArray()
-        } else {
-            listLocalModelTo = saveSelectedPlaceUseCase.getFromHistory(who)
-            listLocalModelTo.reversed()
-            return listLocalModelTo.map {
-                it.name
-            }.toTypedArray()
-        }
+    fun getListHistory(who: Int): List<LocalModelUI> {
+        return saveSelectedPlaceUseCase.getFromHistory(who).reversed()
     }
 
 

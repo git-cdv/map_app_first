@@ -83,7 +83,6 @@ class FromFragment : Fragment() {
                 setMapLongClick(map)
             }
 
-
         childFragmentManager.beginTransaction().replace(R.id.map, mapFragment!!).commit()
 
         return binding.root
