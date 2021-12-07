@@ -20,8 +20,8 @@ import androidx.fragment.app.activityViewModels
 import com.chkan.firstproject.MainActivity
 import com.chkan.firstproject.R
 import com.chkan.firstproject.databinding.FragmentFromBinding
-import com.chkan.base.utils.Constans
 import com.chkan.base.utils.ResultType
+import com.chkan.base.utils.WHO_FROM
 import com.chkan.base.utils.hideKeyboard
 import com.chkan.firstproject.viewmodels.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -58,7 +58,7 @@ class FromFragment : Fragment() {
         initSearchView(binding.searchFrom)
 
         binding.tvHistoryFrom.setOnClickListener {
-            (activity as MainActivity).getBottomSheet(Constans.WHO_FROM)
+            (activity as MainActivity).getBottomSheet(WHO_FROM)
         }
 
         viewModel.searchSuggestion.observe(viewLifecycleOwner, {
@@ -153,7 +153,7 @@ class FromFragment : Fragment() {
                 val selection = cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1))
                 searchView.setQuery(selection, false)
 
-                viewModel.getLatLngSelectedPlace(Constans.WHO_FROM, selection)
+                viewModel.getLatLngSelectedPlace(WHO_FROM, selection)
 
                 return true
             }

@@ -49,7 +49,6 @@ class ResultFragment : Fragment() {
 
         val resultModel = ResultFragmentArgs.fromBundle(requireArguments()).resultModel
 
-        Log.d("MYAPP", "ResultFragment - resultModel: $resultModel")
         viewModel.getRout(resultModel.startLatNng,resultModel.finishLatNng)
         viewModel.saveLatLng(resultModel)
 

@@ -1,10 +1,7 @@
 package com.chkan.firstproject.viewmodels
 
 import androidx.lifecycle.*
-import com.chkan.base.utils.ResultType
-import com.chkan.base.utils.Result
-import com.chkan.base.utils.Constans
-import com.chkan.base.utils.toLatLng
+import com.chkan.base.utils.*
 import com.chkan.domain.models.LocalModelUI
 import com.chkan.domain.usecases.directions.GetLatLngSelectedPlaceUseCase
 import com.chkan.domain.usecases.directions.GetListForSuggestionUseCase
@@ -79,17 +76,19 @@ class MainViewModel @Inject constructor(
     fun getLatLngSelectedPlace(who:Int, name: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             val result = getLatLngSelectedPlaceUseCase.getLatLngSelectedPlace(name)
-            if(who== Constans.WHO_FROM) nameStart = name.toString() else nameFinish = name.toString()
+            if(who== WHO_FROM) nameStart = name.toString() else nameFinish = name.toString()
             updateLatLngSelectedPlaceLiveData(who, result)
         }
     }
 
     fun updateLatLngSelectedPlaceLiveData(who: Int, result: Result<LatLng>) {
-        if (result.resultType==ResultType.SUCCESS && result.data != null) {
-            if(who== Constans.WHO_FROM){
-                _latLngSelectedPlaceFromLiveData.postValue(result.data!!)
-            } else {
-                _latLngSelectedPlaceToLiveData.postValue(result.data!!)
+        if (result.resultType==ResultType.SUCCESS) {
+            if (result.data != null) {
+                if (who == WHO_FROM) {
+                    _latLngSelectedPlaceFromLiveData.postValue(result.data!!)//выше проверяю на null, но всеравно ругается
+                } else {
+                    _latLngSelectedPlaceToLiveData.postValue(result.data!!) //выше проверяю на null, но всеравно ругается
+                }
             }
         } else {
             onResultError()

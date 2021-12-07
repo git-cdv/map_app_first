@@ -22,10 +22,10 @@ import com.chkan.domain.models.ResultModel
 import com.chkan.firstproject.MainActivity
 import com.chkan.firstproject.R
 import com.chkan.base.utils.ResultType
+import com.chkan.base.utils.WHO_TO
 import com.chkan.firstproject.databinding.FragmentToBinding
 import com.chkan.base.utils.hideKeyboard
 import com.chkan.base.utils.toStringModel
-import com.chkan.firstproject.databinding.FragmentFromBinding
 import com.chkan.firstproject.ui.MainFragmentDirections
 import com.chkan.firstproject.viewmodels.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -63,7 +63,7 @@ class ToFragment : Fragment() {
         initSearchView(binding.searchTo)
 
         binding.tvHistoryTo.setOnClickListener {
-            (activity as MainActivity).getBottomSheet(com.chkan.base.utils.Constans.WHO_TO)
+            (activity as MainActivity).getBottomSheet(WHO_TO)
         }
 
         binding.btnTo.setOnClickListener {
@@ -188,7 +188,7 @@ class ToFragment : Fragment() {
                     cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1))
                 searchView.setQuery(selection, false)
 
-                viewModel.getLatLngSelectedPlace(com.chkan.base.utils.Constans.WHO_TO,selection)
+                viewModel.getLatLngSelectedPlace(WHO_TO,selection)
 
                 return true
             }

@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import com.chkan.base.utils.Result
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
+import com.chkan.base.utils.WHO_FROM
 import com.chkan.firstproject.R
-import com.chkan.base.utils.Constans
 import com.chkan.base.utils.toLatLng
 import com.chkan.firstproject.ui.directions.adapter.MainAdapter
 import com.chkan.firstproject.viewmodels.MainViewModel
@@ -17,7 +17,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class FromBottomFragment : BottomSheetDialogFragment() {
 
     private val viewModel: MainViewModel by activityViewModels()
-    private val adapter by lazy {MainAdapter()}
+    private val adapter by lazy {MainAdapter { item ->
+        viewModel.updateLatLngSelectedPlaceLiveData(
+            WHO_FROM,
+            Result.success(item.latlng?.toLatLng())
+        )
+        dismiss()
+    }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,14 +35,9 @@ class FromBottomFragment : BottomSheetDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val list = viewModel.getListHistory(Constans.WHO_FROM)
+        val list = viewModel.getListHistory(WHO_FROM)
         val recyclerView: RecyclerView = view.findViewById(R.id.rv_history)
         adapter.setList(list)
         recyclerView.adapter = adapter
-
-        adapter.onItemClick = { item ->
-            viewModel.updateLatLngSelectedPlaceLiveData(Constans.WHO_FROM, Result.success(item.latlng?.toLatLng()))
-            dismiss()
-        }
     }
 }

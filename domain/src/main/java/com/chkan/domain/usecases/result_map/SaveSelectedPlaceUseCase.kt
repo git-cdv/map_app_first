@@ -1,11 +1,8 @@
 package com.chkan.domain.usecases.result_map
 
-import com.chkan.base.utils.ResultType
+import com.chkan.base.utils.*
 import com.chkan.data.sources.local.LocalModel
 import com.chkan.domain.models.ResultModel
-import com.chkan.base.utils.Constans
-import com.chkan.base.utils.toLatLng
-import com.chkan.base.utils.toStringModel
 import com.chkan.data.sources.local.LocalDataSource
 import com.chkan.data.sources.network.NetworkDataSource
 import com.chkan.domain.models.LocalModelUI
@@ -43,8 +40,8 @@ class SaveSelectedPlaceUseCase @Inject constructor(private val networkDataSource
                     "Unknown"
                 }
             }
-            saveInList(Constans.PREF_LIST_START,nameStart,latlngStart.toLatLng())
-            saveInList(Constans.PREF_LIST_FINISH,nameFinish,latlngFinish.toLatLng())
+            saveInList(PREF_LIST_START,nameStart,latlngStart.toLatLng())
+            saveInList(PREF_LIST_FINISH,nameFinish,latlngFinish.toLatLng())
         }
     }
 
@@ -65,11 +62,11 @@ class SaveSelectedPlaceUseCase @Inject constructor(private val networkDataSource
     }
 
     fun getFromHistory(who: Int) : List<LocalModelUI> {
-        return if(who==Constans.WHO_FROM){
-            val modelListOfString = localDataSource.getString(Constans.PREF_LIST_START)
+        return if(who==WHO_FROM){
+            val modelListOfString = localDataSource.getString(PREF_LIST_START)
             getListLocalModel(modelListOfString).asLocalModelUI()
         } else {
-            val modelListOfString = localDataSource.getString(Constans.PREF_LIST_FINISH)
+            val modelListOfString = localDataSource.getString(PREF_LIST_FINISH)
             getListLocalModel(modelListOfString).asLocalModelUI()
         }
     }
