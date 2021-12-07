@@ -25,6 +25,7 @@ import com.chkan.base.utils.ResultType
 import com.chkan.firstproject.databinding.FragmentToBinding
 import com.chkan.base.utils.hideKeyboard
 import com.chkan.base.utils.toStringModel
+import com.chkan.firstproject.databinding.FragmentFromBinding
 import com.chkan.firstproject.ui.MainFragmentDirections
 import com.chkan.firstproject.viewmodels.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -49,10 +50,15 @@ class ToFragment : Fragment() {
     var suggestions : MutableList<String> = mutableListOf()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentToBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         initSearchView(binding.searchTo)
 
@@ -96,12 +102,10 @@ class ToFragment : Fragment() {
 
         viewModel.latLngSelectedPlaceToLiveData.observe(viewLifecycleOwner, {
                 addFinish(it)
-                mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15F))
+                mapObject?.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15F))
         })
 
         childFragmentManager.beginTransaction().replace(R.id.mapTo, mapFragment!!).commit()
-
-        return binding.root
     }
 
     private fun showError() {
@@ -121,8 +125,8 @@ class ToFragment : Fragment() {
 
     private fun addFinish(latLng: LatLng) {
         viewModel.checkFinish(latLng)
-        mapObject.clear()
-        mapObject.addMarker(
+        mapObject?.clear()
+        mapObject?.addMarker(
             MarkerOptions()
                 .position(latLng)
                 .title(getString(R.string.dropped_finish))
@@ -132,6 +136,7 @@ class ToFragment : Fragment() {
     private fun initSearchView(searchView: SearchView) {
 
         searchView.findViewById<AutoCompleteTextView>(R.id.search_src_text).threshold = 2
+        searchView.setIconifiedByDefault(false)//true - фокус при нажатии на значок, false - на виджет
 
         val from = arrayOf(SearchManager.SUGGEST_COLUMN_TEXT_1)
         val to = intArrayOf(R.id.item_label)

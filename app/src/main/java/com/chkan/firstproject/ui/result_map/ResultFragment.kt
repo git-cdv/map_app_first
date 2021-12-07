@@ -14,8 +14,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.chkan.base.utils.toLatLng
 import com.chkan.firstproject.R
+import com.chkan.firstproject.databinding.FragmentFromBinding
 import com.chkan.firstproject.databinding.FragmentResultBinding
-import com.chkan.firstproject.viewmodels.ResultViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -37,10 +37,15 @@ class ResultFragment : Fragment() {
     private val REQUEST_LOCATION_PERMISSION = 1
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentResultBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val resultModel = ResultFragmentArgs.fromBundle(requireArguments()).resultModel
 
@@ -89,8 +94,6 @@ class ResultFragment : Fragment() {
 
         val toolbar : MaterialToolbar = binding.resultToolbar
         toolbar.setNavigationOnClickListener {findNavController().navigateUp()}
-
-        return binding.root
     }
 
 

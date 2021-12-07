@@ -45,10 +45,15 @@ class FromFragment : Fragment() {
     var suggestions : MutableList<String> = mutableListOf()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFromBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         initSearchView(binding.searchFrom)
 
@@ -66,7 +71,7 @@ class FromFragment : Fragment() {
 
         viewModel.latLngSelectedPlaceFromLiveData.observe(viewLifecycleOwner, {
                 addStart(it)
-                mapObject.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15F))
+                mapObject?.moveCamera(CameraUpdateFactory.newLatLngZoom(it, 15F))
         })
 
         viewModel.isErrorLiveData.observe(viewLifecycleOwner, {
@@ -83,10 +88,7 @@ class FromFragment : Fragment() {
                 setMapLongClick(map)
             }
 
-
         childFragmentManager.beginTransaction().replace(R.id.map, mapFragment!!).commit()
-
-        return binding.root
     }
 
     private fun showError() {
@@ -106,7 +108,8 @@ class FromFragment : Fragment() {
 
     private fun initSearchView(searchView: SearchView) {
 
-        searchView.findViewById<AutoCompleteTextView>(R.id.search_src_text).threshold = 3
+        searchView.findViewById<AutoCompleteTextView>(R.id.search_src_text).threshold = 2
+        searchView.setIconifiedByDefault(false)//true - фокус при нажатии на значок, false - на виджет
 
         val from = arrayOf(SearchManager.SUGGEST_COLUMN_TEXT_1)
         val to = intArrayOf(R.id.item_label)
@@ -160,8 +163,8 @@ class FromFragment : Fragment() {
 
     private fun addStart(latLng: LatLng) {
         viewModel.checkStart(latLng)
-        mapObject.clear()
-        mapObject.addMarker(
+        mapObject?.clear()
+        mapObject?.addMarker(
             MarkerOptions()
                 .position(latLng)
                 .title(getString(R.string.dropped_start))

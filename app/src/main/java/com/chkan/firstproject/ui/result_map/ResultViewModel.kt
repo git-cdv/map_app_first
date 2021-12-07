@@ -1,4 +1,4 @@
-package com.chkan.firstproject.viewmodels
+package com.chkan.firstproject.ui.result_map
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
