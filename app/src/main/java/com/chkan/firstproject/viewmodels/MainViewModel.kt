@@ -57,6 +57,10 @@ class MainViewModel @Inject constructor(
     val latLngSelectedPlaceToLiveData: LiveData<LatLng>
         get() = _latLngSelectedPlaceToLiveData
 
+    private val _historyLiveData: MutableLiveData <List<LocalModelUI>> = MutableLiveData()
+    val historyLiveData: LiveData <List<LocalModelUI>>
+        get() = _historyLiveData
+
     private val _isErrorLiveData: MutableLiveData<Boolean> = MutableLiveData()
     val isErrorLiveData: LiveData<Boolean>
         get() = _isErrorLiveData
@@ -103,8 +107,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getListHistory(who: Int): List<LocalModelUI> {
-        return saveSelectedPlaceUseCase.getFromHistory(who).reversed()
+    fun getListHistory(type: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = saveSelectedPlaceUseCase.getFromHistory(type).reversed()
+            _historyLiveData.postValue(result)
+        }
     }
 
 

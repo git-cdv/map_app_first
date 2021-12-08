@@ -1,11 +1,13 @@
 package com.chkan.firstproject.ui.directions
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
+import com.chkan.base.utils.DB_TYPE_FINISH
 import com.chkan.firstproject.R
 import com.chkan.base.utils.Result
 import com.chkan.base.utils.WHO_TO
@@ -32,9 +34,13 @@ class ToBottomFragment : BottomSheetDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val list = viewModel.getListHistory(WHO_TO)
+
+        viewModel.historyLiveData.observe(viewLifecycleOwner, {
+            adapter.setList(it)
+            Log.d("MYAPP", "ToBottomFragment - historyLiveData: $it")
+        })
+        viewModel.getListHistory(DB_TYPE_FINISH)
         val recyclerView: RecyclerView = view.findViewById(R.id.rv_history)
-        adapter.setList(list)
         recyclerView.adapter = adapter
     }
 }

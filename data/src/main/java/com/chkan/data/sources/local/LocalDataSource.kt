@@ -1,19 +1,21 @@
 package com.chkan.data.sources.local
 
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
+import com.chkan.base.utils.DB_TYPE_FINISH
+import com.chkan.base.utils.DB_TYPE_START
 import javax.inject.Inject
 
-class LocalDataSource @Inject constructor (context: Context){
+class LocalDataSource @Inject constructor (private val historyDao : HistoryDao){
 
-    val pref: SharedPreferences = context.getSharedPreferences("app_pref",MODE_PRIVATE)
-
-    fun add (key:String, value: String){
-        pref.edit().putString(key,value).apply()
+    fun saveAsStart(nameStart: String, latlngStart: String) {
+        historyDao.insert(DatabaseModel(name=nameStart, latlng = latlngStart, type = DB_TYPE_START))
     }
 
-    fun getString (key : String): String? {
-        return pref.getString(key,null)
+    fun saveAsFinish(nameFinish: String, latlngFinish: String) {
+        historyDao.insert(DatabaseModel(name=nameFinish, latlng = latlngFinish, type = DB_TYPE_FINISH))
     }
+
+    suspend fun getListHistory(type: String): List<DatabaseModel> {
+        return historyDao.getListHistory(type)
+    }
+
 }

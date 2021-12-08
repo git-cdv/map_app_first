@@ -1,24 +1,20 @@
 package com.chkan.domain.usecases.result_map
 
 import com.chkan.base.utils.*
-import com.chkan.data.sources.local.LocalModel
 import com.chkan.domain.models.ResultModel
 import com.chkan.data.sources.local.LocalDataSource
 import com.chkan.data.sources.network.NetworkDataSource
 import com.chkan.domain.models.LocalModelUI
 import com.chkan.domain.models.asLocalModelUI
-import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 class SaveSelectedPlaceUseCase @Inject constructor(private val networkDataSource : NetworkDataSource, private val localDataSource : LocalDataSource) {
 
     fun savePlace(resultModel : ResultModel) {
-        GlobalScope.launch {
+        GlobalScope.launch (Dispatchers.IO) {
             var nameStart = resultModel.startName
             var nameFinish = resultModel.finishName
             val latlngStart = resultModel.startLatNng
@@ -40,42 +36,12 @@ class SaveSelectedPlaceUseCase @Inject constructor(private val networkDataSource
                     "Unknown"
                 }
             }
-            saveInList(PREF_LIST_START,nameStart,latlngStart.toLatLng())
-            saveInList(PREF_LIST_FINISH,nameFinish,latlngFinish.toLatLng())
+            localDataSource.saveAsStart(nameStart,latlngStart)
+            localDataSource.saveAsFinish(nameFinish,latlngFinish)
         }
     }
 
-    private fun saveInList(nameList: String, name: String?, latlng: LatLng?) {
-        val dataOfString = localDataSource.getString(nameList)
-
-        if (dataOfString.isNullOrEmpty()) {//если списка нет
-            val listLocalModel = arrayListOf<LocalModel>()
-            listLocalModel.add(LocalModel(name!!,latlng!!.toStringModel()))
-            val modelListOfString = Json.encodeToString(listLocalModel)
-            localDataSource.add(nameList,modelListOfString)
-        } else{
-            val listLocalModel = Json.decodeFromString<ArrayList<LocalModel>>(dataOfString)
-            listLocalModel.add(LocalModel(name!!,latlng!!.toStringModel()))
-            val modelListOfString = Json.encodeToString(listLocalModel)
-            localDataSource.add(nameList,modelListOfString)
-        }
-    }
-
-    fun getFromHistory(who: Int) : List<LocalModelUI> {
-        return if(who==WHO_FROM){
-            val modelListOfString = localDataSource.getString(PREF_LIST_START)
-            getListLocalModel(modelListOfString).asLocalModelUI()
-        } else {
-            val modelListOfString = localDataSource.getString(PREF_LIST_FINISH)
-            getListLocalModel(modelListOfString).asLocalModelUI()
-        }
-    }
-
-    private fun getListLocalModel(model: String?): ArrayList<LocalModel> {
-        return if (model != null) {
-            Json.decodeFromString(model)
-        } else{
-            arrayListOf(LocalModel("Пока нет сохранений",null))
-        }
+    suspend fun getFromHistory(type: String) : List<LocalModelUI> {
+        return localDataSource.getListHistory(type).asLocalModelUI()
     }
 }
