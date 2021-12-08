@@ -110,7 +110,7 @@ class MainViewModel @Inject constructor(
     fun getListHistory(type: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val result = saveSelectedPlaceUseCase.getFromHistory(type).reversed()
-            _historyLiveData.postValue(result)
+            if(result.isNullOrEmpty()) _historyLiveData.postValue(listOf(LocalModelUI("Пока нет данных",null))) else _historyLiveData.postValue(result)
         }
     }
 

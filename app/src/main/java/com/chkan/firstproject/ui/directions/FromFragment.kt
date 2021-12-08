@@ -103,6 +103,7 @@ class FromFragment : Fragment() {
     private fun setMapLongClick(map: GoogleMap) {
         map.setOnMapLongClickListener { latLng ->
             addStart(latLng)
+            viewModel.nameStart = ""
         }
     }
 

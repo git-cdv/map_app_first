@@ -120,6 +120,7 @@ class ToFragment : Fragment() {
     private fun setMapLongClick(map: GoogleMap) {
         map.setOnMapLongClickListener { latLng ->
             addFinish(latLng)
+            viewModel.nameFinish = ""
         }
     }
 
