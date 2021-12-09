@@ -9,4 +9,6 @@
     <string name="text_from">Откуда</string>
     <string name="text_to">Куда</string>
     <string name="text_back">\"Для выхода нажмите \"назад\" еще раз\"</string>
+    <string name="fcm_message">It\'s message</string>
+    <string name="notif_channel_id">FCM channel</string>
 </resources>

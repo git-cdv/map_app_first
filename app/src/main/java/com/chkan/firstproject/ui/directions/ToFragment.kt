@@ -193,7 +193,6 @@ class ToFragment : Fragment() {
 
                 return true
             }
-
         })
     }
 
