@@ -3,19 +3,22 @@ package com.chkan.firstproject.ui.result_map
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.chkan.base.utils.toLatLng
+import com.chkan.domain.models.ResultModel
 import com.chkan.firstproject.R
-import com.chkan.firstproject.databinding.FragmentFromBinding
 import com.chkan.firstproject.databinding.FragmentResultBinding
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -29,8 +32,8 @@ class ResultFragment : Fragment() {
 
     private var mapFragment: SupportMapFragment? = null
     private lateinit var map: GoogleMap
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val viewModel: ResultViewModel by viewModels()
-
     private var _binding: FragmentResultBinding? = null
     private val binding get() = _binding!!
 
@@ -46,11 +49,46 @@ class ResultFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        lateinit var resultModel : ResultModel
 
-        val resultModel = ResultFragmentArgs.fromBundle(requireArguments()).resultModel
+        when {
+            arguments?.containsKey("from_push_rout") == true -> {
+                resultModel = arguments?.getParcelable("from_push_rout")!!
+                getRoutAndSave(resultModel)
+            }
+            arguments?.containsKey("from_push_home") == true -> {
+                val finish = arguments?.getString("from_push_home")!!
+                lateinit var start : String
+                fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        viewModel.getRout(resultModel.startLatNng,resultModel.finishLatNng)
-        viewModel.saveLatLng(resultModel)
+                if (ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return
+                }
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location : Location? ->
+                        start = "${location?.latitude},${location?.longitude}"
+
+                        resultModel = ResultModel(
+                            startName = "PUSH Start",
+                            startLatNng = start,
+                            finishName = "HOME",
+                            finishLatNng = finish)
+
+                        getRoutAndSave(resultModel)
+                    }
+            }
+            else -> {
+                resultModel = ResultFragmentArgs.fromBundle(requireArguments()).resultModel
+                getRoutAndSave(resultModel)
+            }
+        }
 
         viewModel.polylineLiveData.observe(this, {
 
@@ -93,6 +131,11 @@ class ResultFragment : Fragment() {
 
         val toolbar : MaterialToolbar = binding.resultToolbar
         toolbar.setNavigationOnClickListener {findNavController().navigateUp()}
+    }
+
+    private fun getRoutAndSave(resultModel: ResultModel) {
+        viewModel.getRout(resultModel.startLatNng,resultModel.finishLatNng)
+        viewModel.saveLatLng(resultModel)
     }
 
 

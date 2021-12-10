@@ -28,8 +28,10 @@ class PushService : FirebaseMessagingService() {
         const val INTENT_FILTER = "PUSH_EVENT"
         const val FCM_KEY_ACTION = "action"
         const val FCM_ACTION_ROUT = "create_rout"
+        const val FCM_ACTION_HOME = "way_home"
         const val FCM_START = "notif_start"
         const val FCM_FINISH = "notif_finish"
+        const val FCM_HOME = "home_latlng"
         const val TAG = "MYAPP"
     }
 }

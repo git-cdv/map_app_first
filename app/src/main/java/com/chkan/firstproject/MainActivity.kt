@@ -8,13 +8,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.chkan.base.utils.TAG_SHEET_FROM
 import com.chkan.base.utils.TAG_SHEET_TO
 import com.chkan.base.utils.WHO_FROM
+import com.chkan.base.utils.toStringModel
+import com.chkan.domain.models.ResultModel
 import com.chkan.firstproject.databinding.ActivityMainBinding
+import com.chkan.firstproject.fcm.PushService.Companion.FCM_ACTION_HOME
+import com.chkan.firstproject.fcm.PushService.Companion.FCM_ACTION_ROUT
 import com.chkan.firstproject.fcm.PushService.Companion.FCM_FINISH
+import com.chkan.firstproject.fcm.PushService.Companion.FCM_HOME
 import com.chkan.firstproject.fcm.PushService.Companion.FCM_KEY_ACTION
 import com.chkan.firstproject.fcm.PushService.Companion.FCM_START
 import com.chkan.firstproject.fcm.PushService.Companion.INTENT_FILTER
@@ -45,11 +51,30 @@ class MainActivity : AppCompatActivity() {
         initPushBroadcast()
 
         intent.extras?.keySet()?.firstOrNull { it== FCM_KEY_ACTION }?.let {
-            val start = intent.extras?.getString(FCM_START)
-            val finish = intent.extras?.getString(FCM_FINISH)
-            Log.d(TAG, "Intent: start - $start, finish - $finish")
+            var bundle = bundleOf()
+            when(intent.extras?.getString(FCM_KEY_ACTION)){
+                FCM_ACTION_ROUT -> {
+                    val start = intent.extras?.getString(FCM_START)
+                    val finish = intent.extras?.getString(FCM_FINISH)
+                    Log.d(TAG, "Intent: start - $start, finish - $finish")
 
+                    val result = ResultModel(
+                        startName = "PUSH Start",
+                        startLatNng = start!!,
+                        finishName = "PUSH Finish",
+                        finishLatNng = finish!!
+                    )
+                    bundle = bundleOf("from_push_rout" to result)
+                }
+                FCM_ACTION_HOME -> {
+                    val home = intent.extras?.getString(FCM_HOME)
+                    Log.d(TAG, "Intent: home - $home")
 
+                    bundle = bundleOf("from_push_home" to home)
+                }
+            }
+
+            navController!!.navigate(R.id.resultFragment,bundle)
         }
 
 

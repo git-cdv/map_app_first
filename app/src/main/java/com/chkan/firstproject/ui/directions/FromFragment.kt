@@ -37,7 +37,7 @@ class FromFragment : Fragment() {
 
     private val viewModel: MainViewModel by activityViewModels()
     private var mapFragment: SupportMapFragment? = null
-    private lateinit var mapObject: GoogleMap
+    private var mapObject: GoogleMap? = null
 
     private var _binding: FragmentFromBinding? = null
     private val binding get() = _binding!!
