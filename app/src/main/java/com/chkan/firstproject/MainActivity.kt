@@ -30,6 +30,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    
+    //message from remote
 
     lateinit var binding: ActivityMainBinding
     private var back_pressed: Long = 0
