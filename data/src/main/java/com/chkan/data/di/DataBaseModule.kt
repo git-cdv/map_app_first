@@ -10,6 +10,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import net.sqlcipher.database.SupportFactory
+
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -18,11 +20,14 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext appContext: Context): HistoryDatabase {
+        val passphrase: ByteArray = "password".toByteArray()
+        val factory = SupportFactory(passphrase)
+
         return Room.databaseBuilder(
             appContext,
             HistoryDatabase::class.java,
             "history"
-        ).build()
+        ).openHelperFactory(factory).build()
     }
 
     @Provides
